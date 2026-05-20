@@ -1,0 +1,695 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap');
+
+:root {
+  --verde: #00a651;
+  --verde-escuro: #007a3d;
+  --verde-neon: #39ff14;
+  --ouro: #f5c518;
+  --ouro-escuro: #c49a00;
+  --fundo: #050f05;
+  --fundo2: #0a1a0a;
+  --fundo3: #0f240f;
+  --superficie: #0f1f0f;
+  --borda: #1a3a1a;
+  --borda-brilho: #2d5a2d;
+  --texto: #e8f5e8;
+  --texto-muted: #6a9a6a;
+  --vermelho: #e63946;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #030a03;
+  font-family: 'Barlow', sans-serif;
+  color: var(--texto);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Estádio SVG como fundo fixo */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3CradialGradient id='sky' cx='50%25' cy='30%25' r='70%25'%3E%3Cstop offset='0%25' stop-color='%23002776'/%3E%3Cstop offset='60%25' stop-color='%23001040'/%3E%3Cstop offset='100%25' stop-color='%23000510'/%3E%3C/radialGradient%3E%3CradialGradient id='pitch' cx='50%25' cy='50%25' r='60%25'%3E%3Cstop offset='0%25' stop-color='%2300a651'/%3E%3Cstop offset='100%25' stop-color='%23004d20'/%3E%3C/radialGradient%3E%3CradialGradient id='light1' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%23fffde0' stop-opacity='0.9'/%3E%3Cstop offset='100%25' stop-color='%23fffde0' stop-opacity='0'/%3E%3C/radialGradient%3E%3CradialGradient id='spotA' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff' stop-opacity='0.6'/%3E%3Cstop offset='100%25' stop-color='%23ffffff' stop-opacity='0'/%3E%3C/radialGradient%3E%3ClinearGradient id='standTop' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23112211'/%3E%3Cstop offset='100%25' stop-color='%230a180a'/%3E%3C/linearGradient%3E%3ClinearGradient id='standSide' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%230d1f0d'/%3E%3Cstop offset='100%25' stop-color='%23060e06'/%3E%3C/linearGradient%3E%3ClinearGradient id='roofGrad' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23223322'/%3E%3Cstop offset='100%25' stop-color='%23111a11' stop-opacity='0.7'/%3E%3C/linearGradient%3E%3Cfilter id='glow'%3E%3CfeGaussianBlur stdDeviation='8' result='blur'/%3E%3CfeMerge%3E%3CfeMergeNode in='blur'/%3E%3CfeMergeNode in='SourceGraphic'/%3E%3C/feMerge%3E%3C/filter%3E%3Cfilter id='softglow'%3E%3CfeGaussianBlur stdDeviation='18'/%3E%3C/filter%3E%3C/defs%3E%3C!-- Ceu noturno --%3E%3Crect width='1440' height='900' fill='url(%23sky)'/%3E%3C!-- Estrelas --%3E%3Ccircle cx='120' cy='60' r='1.2' fill='%23fff' opacity='0.7'/%3E%3Ccircle cx='300' cy='40' r='0.8' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='500' cy='80' r='1' fill='%23fff' opacity='0.6'/%3E%3Ccircle cx='700' cy='30' r='1.5' fill='%23fff' opacity='0.8'/%3E%3Ccircle cx='900' cy='55' r='0.9' fill='%23fff' opacity='0.5'/%3E%3Ccircle cx='1100' cy='45' r='1.1' fill='%23fff' opacity='0.6'/%3E%3Ccircle cx='1300' cy='70' r='0.7' fill='%23fff' opacity='0.4'/%3E%3Ccircle cx='200' cy='100' r='0.6' fill='%23fff' opacity='0.3'/%3E%3Ccircle cx='850' cy='90' r='1.3' fill='%23fff' opacity='0.7'/%3E%3Ccircle cx='1200' cy='35' r='0.8' fill='%23fff' opacity='0.5'/%3E%3C!-- Torres de iluminacao (fundo desfocado) --%3E%3Crect x='148' y='148' width='16' height='180' fill='%23223322' opacity='0.9'/%3E%3Crect x='1276' y='148' width='16' height='180' fill='%23223322' opacity='0.9'/%3E%3Crect x='148' y='620' width='16' height='180' fill='%23223322' opacity='0.9'/%3E%3Crect x='1276' y='620' width='16' height='180' fill='%23223322' opacity='0.9'/%3E%3C!-- Holofotes brilho --%3E%3Cellipse cx='156' cy='155' rx='55' ry='30' fill='url(%23light1)' opacity='0.7'/%3E%3Cellipse cx='1284' cy='155' rx='55' ry='30' fill='url(%23light1)' opacity='0.7'/%3E%3Cellipse cx='156' cy='625' rx='55' ry='30' fill='url(%23light1)' opacity='0.7'/%3E%3Cellipse cx='1284' cy='625' rx='55' ry='30' fill='url(%23light1)' opacity='0.7'/%3E%3C!-- Teto arquibancada superior --%3E%3Cpath d='M60 170 L1380 170 L1340 230 L100 230 Z' fill='url(%23roofGrad)' opacity='0.95'/%3E%3C!-- Arquibancada superior (fileiras) --%3E%3Crect x='100' y='230' width='1240' height='140' fill='url(%23standTop)' opacity='1'/%3E%3Crect x='110' y='238' width='1220' height='8' fill='%23FFD700' opacity='0.08'/%3E%3Crect x='110' y='252' width='1220' height='8' fill='%23009C3C' opacity='0.12'/%3E%3Crect x='110' y='266' width='1220' height='8' fill='%23002776' opacity='0.15'/%3E%3Crect x='110' y='280' width='1220' height='8' fill='%23009C3C' opacity='0.1'/%3E%3Crect x='110' y='294' width='1220' height='8' fill='%23FFD700' opacity='0.07'/%3E%3Crect x='110' y='308' width='1220' height='8' fill='%23002776' opacity='0.12'/%3E%3Crect x='110' y='322' width='1220' height='8' fill='%23009C3C' opacity='0.1'/%3E%3Crect x='110' y='336' width='1220' height='8' fill='%23FFD700' opacity='0.06'/%3E%3Crect x='110' y='350' width='1220' height='8' fill='%23002776' opacity='0.1'/%3E%3C!-- Arquibancada lateral esquerda --%3E%3Cpath d='M60 170 L100 230 L100 640 L60 700 Z' fill='url(%23standSide)' opacity='0.95'/%3E%3Crect x='62' y='260' width='36' height='6' fill='%23009C3C' opacity='0.15'/%3E%3Crect x='62' y='290' width='36' height='6' fill='%23FFD700' opacity='0.1'/%3E%3Crect x='62' y='320' width='36' height='6' fill='%23002776' opacity='0.15'/%3E%3Crect x='62' y='350' width='36' height='6' fill='%23009C3C' opacity='0.12'/%3E%3Crect x='62' y='380' width='36' height='6' fill='%23FFD700' opacity='0.08'/%3E%3Crect x='62' y='410' width='36' height='6' fill='%23002776' opacity='0.12'/%3E%3Crect x='62' y='440' width='36' height='6' fill='%23009C3C' opacity='0.1'/%3E%3Crect x='62' y='470' width='36' height='6' fill='%23FFD700' opacity='0.07'/%3E%3Crect x='62' y='500' width='36' height='6' fill='%23002776' opacity='0.1'/%3E%3Crect x='62' y='530' width='36' height='6' fill='%23009C3C' opacity='0.1'/%3E%3Crect x='62' y='560' width='36' height='6' fill='%23FFD700' opacity='0.06'/%3E%3Crect x='62' y='590' width='36' height='6' fill='%23002776' opacity='0.08'/%3E%3Crect x='62' y='620' width='36' height='6' fill='%23009C3C' opacity='0.08'/%3E%3C!-- Arquibancada lateral direita --%3E%3Cpath d='M1380 170 L1340 230 L1340 640 L1380 700 Z' fill='url(%23standSide)' opacity='0.95'/%3E%3Crect x='1342' y='260' width='36' height='6' fill='%23009C3C' opacity='0.15'/%3E%3Crect x='1342' y='290' width='36' height='6' fill='%23FFD700' opacity='0.1'/%3E%3Crect x='1342' y='320' width='36' height='6' fill='%23002776' opacity='0.15'/%3E%3Crect x='1342' y='350' width='36' height='6' fill='%23009C3C' opacity='0.12'/%3E%3Crect x='1342' y='380' width='36' height='6' fill='%23FFD700' opacity='0.08'/%3E%3Crect x='1342' y='410' width='36' height='6' fill='%23002776' opacity='0.12'/%3E%3Crect x='1342' y='440' width='36' height='6' fill='%23009C3C' opacity='0.1'/%3E%3Crect x='1342' y='470' width='36' height='6' fill='%23FFD700' opacity='0.07'/%3E%3Crect x='1342' y='500' width='36' height='6' fill='%23002776' opacity='0.1'/%3E%3Crect x='1342' y='530' width='36' height='6' fill='%23009C3C' opacity='0.1'/%3E%3Crect x='1342' y='560' width='36' height='6' fill='%23FFD700' opacity='0.06'/%3E%3Crect x='1342' y='590' width='36' height='6' fill='%23002776' opacity='0.08'/%3E%3Crect x='1342' y='620' width='36' height='6' fill='%23009C3C' opacity='0.08'/%3E%3C!-- Teto arquibancada inferior --%3E%3Cpath d='M60 700 L1380 700 L1340 640 L100 640 Z' fill='url(%23roofGrad)' opacity='0.9'/%3E%3C!-- Arquibancada inferior (fileiras) --%3E%3Crect x='100' y='500' width='1240' height='140' fill='url(%23standTop)' opacity='0.95'/%3E%3Crect x='110' y='508' width='1220' height='8' fill='%23002776' opacity='0.15'/%3E%3Crect x='110' y='522' width='1220' height='8' fill='%23009C3C' opacity='0.12'/%3E%3Crect x='110' y='536' width='1220' height='8' fill='%23FFD700' opacity='0.08'/%3E%3Crect x='110' y='550' width='1220' height='8' fill='%23002776' opacity='0.1'/%3E%3Crect x='110' y='564' width='1220' height='8' fill='%23009C3C' opacity='0.1'/%3E%3Crect x='110' y='578' width='1220' height='8' fill='%23FFD700' opacity='0.07'/%3E%3Crect x='110' y='592' width='1220' height='8' fill='%23002776' opacity='0.08'/%3E%3Crect x='110' y='606' width='1220' height='8' fill='%23009C3C' opacity='0.08'/%3E%3Crect x='110' y='620' width='1220' height='8' fill='%23FFD700' opacity='0.06'/%3E%3C!-- Gramado --%3E%3Crect x='100' y='370' width='1240' height='130' fill='url(%23pitch)'/%3E%3C!-- Faixas do gramado --%3E%3Crect x='100' y='370' width='124' height='130' fill='%2300b359' opacity='0.5'/%3E%3Crect x='224' y='370' width='124' height='130' fill='%23009144' opacity='0.5'/%3E%3Crect x='348' y='370' width='124' height='130' fill='%2300b359' opacity='0.5'/%3E%3Crect x='472' y='370' width='124' height='130' fill='%23009144' opacity='0.5'/%3E%3Crect x='596' y='370' width='124' height='130' fill='%2300b359' opacity='0.5'/%3E%3Crect x='720' y='370' width='124' height='130' fill='%23009144' opacity='0.5'/%3E%3Crect x='844' y='370' width='124' height='130' fill='%2300b359' opacity='0.5'/%3E%3Crect x='968' y='370' width='124' height='130' fill='%23009144' opacity='0.5'/%3E%3Crect x='1092' y='370' width='124' height='130' fill='%2300b359' opacity='0.5'/%3E%3Crect x='1216' y='370' width='124' height='130' fill='%23009144' opacity='0.5'/%3E%3C!-- Linhas do campo --%3E%3Crect x='100' y='370' width='1240' height='2' fill='white' opacity='0.5'/%3E%3Crect x='100' y='498' width='1240' height='2' fill='white' opacity='0.5'/%3E%3Crect x='719' y='370' width='2' height='130' fill='white' opacity='0.5'/%3E%3Cellipse cx='720' cy='435' rx='80' ry='40' fill='none' stroke='white' stroke-width='2' opacity='0.5'/%3E%3Ccircle cx='720' cy='435' r='4' fill='white' opacity='0.6'/%3E%3C!-- Gol esquerdo --%3E%3Crect x='100' y='400' width='30' height='70' fill='none' stroke='white' stroke-width='2' opacity='0.5'/%3E%3C!-- Gol direito --%3E%3Crect x='1310' y='400' width='30' height='70' fill='none' stroke='white' stroke-width='2' opacity='0.5'/%3E%3C!-- Area esquerda --%3E%3Crect x='100' y='390' width='120' height='90' fill='none' stroke='white' stroke-width='1.5' opacity='0.4'/%3E%3C!-- Area direita --%3E%3Crect x='1220' y='390' width='120' height='90' fill='none' stroke='white' stroke-width='1.5' opacity='0.4'/%3E%3C!-- Iluminacao holofote sobre gramado --%3E%3Cellipse cx='720' cy='435' rx='500' ry='120' fill='url(%23spotA)' opacity='0.18'/%3E%3C!-- Overlay escuro para nao competir com conteudo --%3E%3Crect width='1440' height='900' fill='%23000' opacity='0.52'/%3E%3C!-- Overlay degrade baixo --%3E%3Crect width='1440' height='900' fill='url(%23sky)' opacity='0.25'/%3E%3C/svg%3E");
+  background-size: cover;
+  background-position: center;
+  filter: blur(3px) brightness(0.75);
+  transform: scale(1.04);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Overlay suave sobre o estádio */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top left, rgba(0,156,60,0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(0,39,118,0.22) 0%, transparent 50%),
+    radial-gradient(ellipse at top right, rgba(255,220,0,0.07) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 60px 20px 40px;
+  z-index: 1;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(0,166,81,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-trofeu {
+  font-size: 72px;
+  line-height: 1;
+  margin-bottom: 12px;
+  animation: trofeuPulse 3s ease-in-out infinite;
+}
+
+@keyframes trofeuPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(245,197,24,0.4)); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 28px rgba(245,197,24,0.9)); }
+}
+
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 10vw, 96px);
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, #fff 0%, var(--ouro) 50%, var(--verde) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.hero-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--verde);
+}
+
+.hero-linha {
+  width: 100px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--ouro), transparent);
+  margin: 20px auto;
+}
+
+/* Nome */
+.nome-section {
+  position: relative;
+  z-index: 1;
+  max-width: 500px;
+  margin: 0 auto 36px;
+  padding: 0 20px;
+}
+
+.nome-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--verde);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.nome-input-wrap { position: relative; }
+
+.nome-input-wrap::before {
+  content: '\26BD';
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  pointer-events: none;
+}
+
+#nome {
+  width: 100%;
+  padding: 14px 16px 14px 48px;
+  background: var(--superficie);
+  border: 1px solid var(--borda-brilho);
+  border-radius: 8px;
+  color: var(--texto);
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s;
+  outline: none;
+}
+
+#nome:focus {
+  border-color: var(--verde);
+  box-shadow: 0 0 0 3px rgba(0,166,81,0.15);
+}
+
+#nome::placeholder { color: var(--texto-muted); }
+
+/* Tabs */
+.tabs {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 20px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 10px 24px;
+  background: transparent;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  color: var(--texto-muted);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.tab-btn:hover { color: var(--texto); border-color: var(--borda-brilho); }
+
+.tab-btn.ativo {
+  color: #fff;
+  border-color: var(--verde);
+  background: rgba(0,122,61,0.4);
+  box-shadow: 0 0 16px rgba(0,166,81,0.25);
+}
+
+/* Main */
+.main {
+  position: relative;
+  z-index: 1;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+.painel { display: none; }
+.painel.ativo { display: block; }
+
+/* Rodada */
+.rodada-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 48px 0 20px;
+}
+
+.rodada-titulo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 36px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--texto-muted);
+}
+
+.rodada-linha {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--borda-brilho) 0%, transparent 100%);
+}
+
+/* Grid jogos */
+.jogos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 14px;
+}
+
+/* Card jogo */
+.jogo-card {
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 12px;
+  padding: 18px;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.jogo-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--verde), var(--ouro), var(--verde));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.jogo-card:hover {
+  border-color: var(--borda-brilho);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.5);
+}
+
+.jogo-card:hover::after { opacity: 1; }
+
+.jogo-data {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ouro);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.jogo-data-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--ouro);
+  display: inline-block;
+}
+
+.jogo-times {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.time-nome {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--texto);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.jogo-vs {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: var(--borda-brilho);
+  text-align: center;
+}
+
+.placar-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.placar-input {
+  width: 62px;
+  height: 62px;
+  text-align: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px;
+  background: var(--fundo2);
+  border: 2px solid var(--borda);
+  border-radius: 8px;
+  color: var(--texto);
+  outline: none;
+  transition: all 0.25s;
+  -moz-appearance: textfield;
+}
+
+.placar-input::-webkit-outer-spin-button,
+.placar-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+.placar-input:focus {
+  border-color: var(--verde);
+  box-shadow: 0 0 0 3px rgba(0,166,81,0.2);
+  color: #5fff5f;
+}
+
+.placar-sep {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  color: var(--borda-brilho);
+}
+
+.btn-salvar {
+  width: 100%;
+  padding: 11px;
+  background: linear-gradient(135deg, var(--verde-escuro), var(--verde));
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.btn-salvar:hover {
+  box-shadow: 0 4px 18px rgba(0,166,81,0.45);
+  transform: translateY(-1px);
+}
+
+.btn-salvar:active { transform: translateY(0); }
+
+.btn-salvo {
+  background: linear-gradient(135deg, #0a2a0a, #1a4a1a) !important;
+  box-shadow: none !important;
+  transform: none !important;
+  color: var(--verde) !important;
+}
+
+/* Ranking */
+.ranking-header {
+  text-align: center;
+  padding: 20px 0 32px;
+}
+
+.ranking-titulo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 52px;
+  letter-spacing: 4px;
+  color: var(--ouro);
+  text-shadow: 0 0 30px rgba(245,197,24,0.3);
+}
+
+.ranking-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  transition: border-color 0.3s;
+  animation: slideIn 0.4s ease backwards;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.ranking-item:hover { border-color: var(--borda-brilho); }
+
+.ranking-item.pos1 { border-color: rgba(245,197,24,0.5); background: rgba(245,197,24,0.04); }
+.ranking-item.pos2 { border-color: rgba(180,180,180,0.4); }
+.ranking-item.pos3 { border-color: rgba(205,127,50,0.4); }
+
+.ranking-pos {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px;
+  min-width: 40px;
+  text-align: center;
+  color: var(--texto-muted);
+}
+
+.pos1 .ranking-pos { color: var(--ouro); }
+.pos2 .ranking-pos { color: #b0b0b0; }
+.pos3 .ranking-pos { color: #cd7f32; }
+
+.ranking-medalha { font-size: 22px; }
+
+.ranking-nome {
+  flex: 1;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.ranking-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat { text-align: center; }
+
+.stat-valor {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--verde);
+  display: block;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--texto-muted);
+}
+
+.ranking-pontos {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  color: var(--ouro);
+  min-width: 56px;
+  text-align: right;
+}
+
+.pos1 .ranking-pontos { text-shadow: 0 0 12px rgba(245,197,24,0.5); }
+
+.ranking-pts-label {
+  font-size: 10px;
+  color: var(--texto-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+/* Feed */
+.feed-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.feed-titulo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  letter-spacing: 3px;
+}
+
+.feed-badge {
+  background: rgba(0,122,61,0.3);
+  border: 1px solid var(--verde);
+  border-radius: 20px;
+  padding: 4px 14px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--verde);
+}
+
+.feed-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feed-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  animation: fadeUp 0.3s ease backwards;
+  transition: border-color 0.3s;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.feed-item:hover { border-color: var(--borda-brilho); }
+
+.feed-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(0,122,61,0.3);
+  border: 1px solid var(--verde);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 15px;
+  color: var(--verde);
+  flex-shrink: 0;
+}
+
+.feed-nome {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  min-width: 90px;
+}
+
+.feed-jogo {
+  flex: 1;
+  font-size: 13px;
+  color: var(--texto-muted);
+}
+
+.feed-placar {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  background: var(--fundo2);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 3px 12px;
+  white-space: nowrap;
+}
+
+.feed-hora {
+  font-size: 11px;
+  color: var(--texto-muted);
+  min-width: 38px;
+  text-align: right;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 28px; right: 28px;
+  background: rgba(0,80,40,0.95);
+  border: 1px solid var(--verde);
+  border-radius: 10px;
+  padding: 14px 22px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: #fff;
+  z-index: 9999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+}
+
+.toast.show { transform: translateY(0); opacity: 1; }
+
+.toast.erro { background: rgba(80,10,10,0.95); border-color: var(--vermelho); }
+
+/* Regras */
+.regras {
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.regras-titulo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 44px;
+  letter-spacing: 4px;
+  text-align: center;
+  color: var(--texto);
+  margin-bottom: 28px;
+}
+
+.regra-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: var(--superficie);
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  margin-bottom: 12px;
+  transition: border-color 0.3s;
+}
+
+.regra-card:hover { border-color: var(--borda-brilho); }
+
+.regra-pts {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: var(--ouro);
+  min-width: 60px;
+  text-align: center;
+  line-height: 1;
+}
+
+.regra-info h4 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.regra-info p {
+  font-size: 13px;
+  color: var(--texto-muted);
+  line-height: 1.5;
+}
+
+/* Vazio */
+.vazio {
+  text-align: center;
+  padding: 40px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--texto-muted);
+}
+
+.loading {
+  text-align: center;
+  padding: 32px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--texto-muted);
+}
+
+@media (max-width: 768px) {
+  .jogos-grid { grid-template-columns: 1fr; }
+  .ranking-stats { display: none; }
+  .feed-jogo { display: none; }
+  .hero-trofeu { font-size: 52px; }
+}

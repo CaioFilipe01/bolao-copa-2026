@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bolao da Copa 2026</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .fase-nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 0 20px 12px;
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      scrollbar-width: none;
+    }
+    .fase-nav::-webkit-scrollbar { display: none; }
+    .fase-btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--borda);
+      background: var(--superficie);
+      color: var(--texto-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .fase-btn:hover { border-color: var(--borda-brilho); color: var(--texto); }
+    .fase-btn.ativo { border-color: var(--verde); color: var(--verde); background: rgba(0,166,81,0.12); }
+    .fase-btn.bloqueado { opacity: 0.35; cursor: not-allowed; }
+    .aba-badge {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+    }
+    .aba-badge.aberto  { background: rgba(0,166,81,0.25);  color: #00a651; }
+    .aba-badge.fechado { background: rgba(230,57,70,0.2);  color: #e63946; }
+    .aba-badge.aguarda { background: rgba(245,197,24,0.2); color: #f5c518; }
+
+    .prazo-banner {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto 18px;
+      padding: 0 20px;
+    }
+    .prazo-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      border-radius: 10px;
+      border: 1px solid;
+      font-family: 'Barlow Condensed', sans-serif;
+    }
+    .prazo-card.aberto   { background: rgba(0,166,81,0.08);  border-color: var(--verde); }
+    .prazo-card.encerrado{ background: rgba(230,57,70,0.08); border-color: var(--vermelho); }
+    .prazo-card.aguardando{ background: rgba(245,197,24,0.08); border-color: var(--ouro); }
+    .prazo-icon { font-size: 22px; }
+    .prazo-texto { flex: 1; }
+    .prazo-titulo { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+    .prazo-card.aberto    .prazo-titulo { color: var(--verde); }
+    .prazo-card.encerrado .prazo-titulo { color: var(--vermelho); }
+    .prazo-card.aguardando .prazo-titulo { color: var(--ouro); }
+    .prazo-detalhe { font-size: 13px; color: var(--texto-muted); margin-top: 2px; letter-spacing: 0.5px; }
+    .prazo-countdown { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 2px; color: var(--ouro); white-space: nowrap; }
+
+    .jogo-card.bloqueado { opacity: 0.55; }
+    .jogo-card.bloqueado .placar-input { background: rgba(255,255,255,0.03); cursor: not-allowed; }
+    .jogo-card.bloqueado .btn-salvar   { background: rgba(255,255,255,0.05); color: var(--texto-muted); cursor: not-allowed; }
+
+    .mata-mata-aviso {
+      max-width: 600px; margin: 30px auto;
+      padding: 28px 24px;
+      background: var(--superficie);
+      border: 1px solid var(--borda-brilho);
+      border-radius: 12px; text-align: center;
+    }
+    .mata-mata-aviso h3 { font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 3px; color: var(--ouro); margin-bottom: 10px; }
+    .mata-mata-aviso p  { font-size: 14px; color: var(--texto-muted); line-height: 1.6; }
+    .chaveamento { max-width: 860px; margin: 0 auto; }
+    .chave-titulo { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 4px; color: var(--texto); margin: 28px 0 16px; text-align: center; }
+    .chave-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; padding: 0 4px; }
+    .chave-jogo { background: var(--superficie); border: 1px solid var(--borda); border-radius: 8px; padding: 14px 16px; transition: border-color 0.2s; }
+    .chave-jogo:hover { border-color: var(--borda-brilho); }
+    .chave-jogo-id { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 2px; color: var(--verde); text-transform: uppercase; margin-bottom: 6px; }
+    .chave-confronto { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; color: var(--texto); line-height: 1.5; }
+
+    /* ── PIN ── */
+    .pin-section {
+      position: relative; z-index: 1;
+      max-width: 500px; margin: -8px auto 28px; padding: 0 20px;
+      overflow: hidden;
+      max-height: 0; opacity: 0;
+      transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease;
+    }
+    .pin-section.visivel { max-height: 120px; opacity: 1; margin-top: 0; }
+
+    .pin-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+      margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+    }
+    .pin-label.novo  { color: var(--verde); }
+    .pin-label.confirmar { color: var(--ouro); }
+    .pin-label.erro  { color: var(--vermelho); }
+    .pin-label.ok    { color: var(--verde); }
+
+    .pin-inputs { display: flex; gap: 10px; align-items: center; }
+    .pin-digito {
+      width: 52px; height: 56px;
+      background: var(--superficie); border: 1px solid var(--borda);
+      border-radius: 8px; color: var(--texto);
+      font-family: 'Bebas Neue', sans-serif; font-size: 28px;
+      text-align: center; letter-spacing: 2px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -moz-appearance: textfield;
+    }
+    .pin-digito::-webkit-outer-spin-button,
+    .pin-digito::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .pin-digito:focus { outline: none; border-color: var(--verde); box-shadow: 0 0 0 2px rgba(0,166,81,0.2); }
+    .pin-digito.erro  { border-color: var(--vermelho); box-shadow: 0 0 0 2px rgba(230,57,70,0.2); animation: shake 0.35s ease; }
+    .pin-digito.ok    { border-color: var(--verde); box-shadow: 0 0 0 2px rgba(0,166,81,0.25); }
+    @keyframes shake {
+      0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)}
+    }
+    .pin-status-icon { font-size: 22px; margin-left: 6px; }
+    .pin-hint { font-size: 12px; color: var(--texto-muted); margin-top: 6px; letter-spacing: 0.5px; }
+    .usuario-logado {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 8px;
+      background: rgba(0,166,81,0.08); border: 1px solid var(--verde);
+      font-family: 'Barlow Condensed', sans-serif; font-size: 14px; letter-spacing: 1px;
+    }
+    .usuario-logado-nome { color: var(--verde); font-weight: 700; text-transform: uppercase; flex: 1; }
+    .btn-sair {
+      font-family: 'Barlow Condensed', sans-serif; font-size: 11px; letter-spacing: 1.5px;
+      text-transform: uppercase; padding: 4px 10px; border-radius: 5px;
+      border: 1px solid var(--borda-brilho); background: transparent;
+      color: var(--texto-muted); cursor: pointer; transition: all 0.2s;
+    }
+    .btn-sair:hover { border-color: var(--vermelho); color: var(--vermelho); }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-trofeu">&#127942;</div>
+  <h1>Bolao da Copa</h1>
+  <div class="hero-sub">FIFA World Cup 2026</div>
+  <div class="hero-linha"></div>
+</div>
+
+<div class="nome-section" id="nomeSection">
+  <label class="nome-label" for="nome">Seu nome no bolao</label>
+  <div class="nome-input-wrap">
+    <input type="text" id="nome" placeholder="Digite seu nome para entrar" autocomplete="off">
+  </div>
+</div>
+
+<!-- Seção PIN (aparece após digitar o nome) -->
+<div class="pin-section" id="pinSection">
+  <div class="pin-label novo" id="pinLabel">&#128274; Crie um PIN de 4 dígitos para proteger seu nome</div>
+  <div class="pin-inputs">
+    <input class="pin-digito" id="pin0" type="number" min="0" max="9" placeholder="·" maxlength="1">
+    <input class="pin-digito" id="pin1" type="number" min="0" max="9" placeholder="·" maxlength="1">
+    <input class="pin-digito" id="pin2" type="number" min="0" max="9" placeholder="·" maxlength="1">
+    <input class="pin-digito" id="pin3" type="number" min="0" max="9" placeholder="·" maxlength="1">
+    <span class="pin-status-icon" id="pinStatusIcon"></span>
+  </div>
+  <div class="pin-hint" id="pinHint">O PIN protege seu nome — só você consegue palpitar com ele.</div>
+</div>
+
+<!-- Usuário autenticado (substitui o campo nome após login) -->
+<div class="nome-section" id="usuarioLogadoSection" style="display:none;">
+  <div class="usuario-logado">
+    <span>&#9917;</span>
+    <span class="usuario-logado-nome" id="usuarioLogadoNome"></span>
+    <button class="btn-sair" onclick="window.fazerLogout()">Sair</button>
+  </div>
+</div>
+
+<nav class="tabs">
+  <button class="tab-btn ativo" onclick="trocarTab('jogos', this)">&#9917; Palpites</button>
+  <button class="tab-btn" onclick="trocarTab('ranking', this)">&#129351; Ranking</button>
+  <button class="tab-btn" onclick="trocarTab('feed', this)">&#128203; Todos os Palpites</button>
+  <button class="tab-btn" onclick="trocarTab('regras', this)">&#128214; Regras</button>
+  <button class="tab-btn" onclick="trocarTab('admin', this)">&#128274; Admin</button>
+</nav>
+
+<div class="main">
+
+  <div id="painel-jogos" class="painel ativo">
+    <div class="fase-nav" id="faseNav"></div>
+    <div class="prazo-banner">
+      <div class="prazo-card aberto" id="prazoBanner">
+        <div class="prazo-icon">&#9203;</div>
+        <div class="prazo-texto">
+          <div class="prazo-titulo" id="prazoTitulo">Carregando...</div>
+          <div class="prazo-detalhe" id="prazoDetalhe"></div>
+        </div>
+        <div class="prazo-countdown" id="prazoCountdown"></div>
+      </div>
+    </div>
+    <div id="progressoWrap" style="display:none;max-width:860px;margin:0 auto 24px;padding:0 20px;position:relative;z-index:1;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--verde);margin-bottom:8px;display:flex;justify-content:space-between;">
+        <span>&#9917; Seus Palpites</span>
+        <span id="progressoTexto">0 / 0</span>
+      </div>
+      <div style="background:var(--borda);border-radius:6px;height:8px;overflow:hidden;">
+        <div id="progressoBarra" style="height:100%;background:linear-gradient(90deg,var(--verde-escuro),var(--verde));border-radius:6px;width:0%;transition:width 0.5s ease;"></div>
+      </div>
+    </div>
+    <div id="listaJogos"></div>
+  </div>
+
+  <div id="painel-ranking" class="painel">
+    <div class="ranking-header">
+      <div class="ranking-titulo">&#127942; Classificacao</div>
+    </div>
+    <div id="rankingLista" class="ranking-lista">
+      <div class="loading">Carregando...</div>
+    </div>
+  </div>
+
+  <div id="painel-feed" class="painel">
+    <div class="feed-header">
+      <div class="feed-titulo">Palpites ao Vivo</div>
+      <span class="feed-badge" id="totalPalpites">0 palpites</span>
+    </div>
+    <div id="feedLista" class="feed-lista">
+      <div class="loading">Carregando...</div>
+    </div>
+  </div>
+
+  <div id="painel-regras" class="painel">
+    <div class="regras">
+      <div class="regras-titulo">Como Pontuar</div>
+      <div class="regra-card">
+        <div class="regra-pts">25</div>
+        <div class="regra-info"><h4>Placar Exato</h4><p>Acertou o resultado exato do jogo (ex: 2x1 = 2x1). Maxima pontuacao!</p></div>
+      </div>
+      <div class="regra-card">
+        <div class="regra-pts">15</div>
+        <div class="regra-info"><h4>Saldo de Gols Correto</h4><p>Acertou o vencedor e a diferenca de gols, mas nao o placar exato (ex: palpitou 3x1, foi 2x0).</p></div>
+      </div>
+      <div class="regra-card">
+        <div class="regra-pts">10</div>
+        <div class="regra-info"><h4>Vencedor Correto</h4><p>Acertou quem ganhou ou que seria empate, mas errou o saldo de gols.</p></div>
+      </div>
+      <div class="regra-card">
+        <div class="regra-pts" style="color: var(--vermelho)">0</div>
+        <div class="regra-info"><h4>Errou Tudo</h4><p>Errou o vencedor ou empate. Nenhum ponto nessa rodada.</p></div>
+      </div>
+      <div style="margin-top:28px;padding:18px;background:var(--superficie);border:1px solid var(--borda);border-radius:10px;">
+        <p style="font-family:'Barlow Condensed';font-size:16px;letter-spacing:1px;color:var(--texto-muted);line-height:1.7;">
+          &#9888;&#65039; Os placares precisam ser inseridos manualmente pelo organizador no Firebase apos cada partida. A classificacao e atualizada em tempo real!
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="painel-admin" class="painel">
+    <div style="max-width:640px;margin:0 auto;">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:4px;text-align:center;color:var(--ouro);padding:20px 0 8px;">&#128274; Painel Admin</div>
+      <div style="text-align:center;font-size:13px;color:var(--texto-muted);margin-bottom:28px;letter-spacing:1px;">Insira os resultados após cada partida. O ranking atualiza em tempo real.</div>
+
+      <!-- Senha admin -->
+      <div id="adminLogin" style="background:var(--superficie);border:1px solid var(--borda-brilho);border-radius:12px;padding:24px;margin-bottom:20px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--verde);margin-bottom:12px;">Senha do Organizador</div>
+        <div style="display:flex;gap:10px;">
+          <input type="password" id="adminSenha" placeholder="Digite a senha" style="flex:1;padding:12px 16px;background:var(--fundo2);border:1px solid var(--borda-brilho);border-radius:8px;color:var(--texto);font-family:'Barlow',sans-serif;font-size:15px;outline:none;">
+          <button onclick="window.verificarAdmin()" style="padding:12px 20px;background:linear-gradient(135deg,var(--verde-escuro),var(--verde));border:none;border-radius:8px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">Entrar</button>
+        </div>
+        <div id="adminLoginErro" style="font-size:12px;color:var(--vermelho);margin-top:8px;display:none;">Senha incorreta.</div>
+      </div>
+
+      <!-- Painel de resultados (oculto até autenticar) -->
+      <div id="adminPainel" style="display:none;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--verde);margin-bottom:14px;">Selecione o Jogo</div>
+        <select id="adminJogoSelect" style="width:100%;padding:12px 16px;background:var(--fundo2);border:1px solid var(--borda-brilho);border-radius:8px;color:var(--texto);font-family:'Barlow',sans-serif;font-size:14px;margin-bottom:16px;outline:none;">
+          <option value="">— escolha um jogo —</option>
+        </select>
+        <div id="adminJogoInfo" style="display:none;background:var(--superficie);border:1px solid var(--borda);border-radius:10px;padding:18px;margin-bottom:16px;">
+          <div id="adminJogoTimes" style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;text-align:center;letter-spacing:1px;margin-bottom:16px;color:var(--texto);"></div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px;">
+            <input type="number" id="adminPlacarA" min="0" max="30" placeholder="0" style="width:70px;height:70px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:32px;background:var(--fundo2);border:2px solid var(--borda-brilho);border-radius:8px;color:var(--texto);outline:none;">
+            <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--borda-brilho);">x</span>
+            <input type="number" id="adminPlacarB" min="0" max="30" placeholder="0" style="width:70px;height:70px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:32px;background:var(--fundo2);border:2px solid var(--borda-brilho);border-radius:8px;color:var(--texto);outline:none;">
+          </div>
+          <div id="adminResultadoAtual" style="text-align:center;font-size:13px;color:var(--ouro);margin-bottom:14px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;"></div>
+          <button onclick="window.salvarResultado()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--verde-escuro),var(--verde));border:none;border-radius:8px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">&#128190; Salvar Resultado</button>
+        </div>
+
+        <!-- Lista de resultados já inseridos -->
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--texto-muted);margin:24px 0 12px;">Resultados Inseridos</div>
+        <div id="adminResultadosList" style="display:flex;flex-direction:column;gap:8px;"></div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, setDoc, doc, deleteDoc,
+  onSnapshot, query, orderBy, where, getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAO6KLhEYoTQF3d-6-4iE1JgLcbSMMteeg",
+  authDomain: "bolao-copa-2170f.firebaseapp.com",
+  projectId: "bolao-copa-2170f",
+  storageBucket: "bolao-copa-2170f.firebasestorage.app",
+  messagingSenderId: "861560150174",
+  appId: "1:861560150174:web:fce126a52a3e7d5b1e838f"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// ─── FASES ────────────────────────────────────────────────────────────────
+const FASES = [
+  {
+    id: "grupos_r1", nome: "1 Rodada", tipo: "grupos", rodada: 1,
+    prazoFim: new Date("2026-06-11T19:00:00Z"), // 11/06 16h BRT
+    visivelDe: new Date("2026-01-01T00:00:00Z"),
+  },
+  {
+    id: "grupos_r2", nome: "2 Rodada", tipo: "grupos", rodada: 2,
+    prazoFim: new Date("2026-06-18T16:00:00Z"), // 18/06 13h BRT
+    visivelDe: new Date("2026-01-01T00:00:00Z"),
+  },
+  {
+    id: "grupos_r3", nome: "3 Rodada", tipo: "grupos", rodada: 3,
+    prazoFim: new Date("2026-06-24T19:00:00Z"), // 24/06 16h BRT
+    visivelDe: new Date("2026-01-01T00:00:00Z"),
+  },
+  {
+    id: "mata16", nome: "16avos", tipo: "mata", rodada: 16,
+    prazoFim: null,
+    visivelDe: new Date("2026-06-28T00:00:00Z"),
+  },
+  {
+    id: "oitavas", nome: "Oitavas", tipo: "mata", rodada: 8,
+    prazoFim: null,
+    visivelDe: new Date("2026-07-01T00:00:00Z"),
+  }
+];
+
+// ─── JOGOS ────────────────────────────────────────────────────────────────
+const jogos = [
+  // 1 RODADA
+  { id:"jogo1",  fase:"grupos_r1", rodada:1, data:"11/06", hora:"16h",    grupo:"A", timeA:"Mexico",           timeB:"Africa do Sul",        local:"Cidade do Mexico" },
+  { id:"jogo2",  fase:"grupos_r1", rodada:1, data:"11/06", hora:"23h",    grupo:"A", timeA:"Coreia do Sul",    timeB:"Tchequia",             local:"Guadalajara" },
+  { id:"jogo3",  fase:"grupos_r1", rodada:1, data:"12/06", hora:"16h",    grupo:"B", timeA:"Canada",           timeB:"Bosnia & Herzegovina", local:"Toronto" },
+  { id:"jogo4",  fase:"grupos_r1", rodada:1, data:"12/06", hora:"22h",    grupo:"D", timeA:"Estados Unidos",   timeB:"Paraguai",             local:"Los Angeles" },
+  { id:"jogo5",  fase:"grupos_r1", rodada:1, data:"13/06", hora:"16h",    grupo:"B", timeA:"Qatar",            timeB:"Suica",                local:"Santa Clara" },
+  { id:"jogo6",  fase:"grupos_r1", rodada:1, data:"13/06", hora:"19h",    grupo:"C", timeA:"Brasil",           timeB:"Marrocos",             local:"Nova Jersey" },
+  { id:"jogo7",  fase:"grupos_r1", rodada:1, data:"13/06", hora:"22h",    grupo:"C", timeA:"Haiti",            timeB:"Escocia",              local:"Boston" },
+  { id:"jogo8",  fase:"grupos_r1", rodada:1, data:"14/06", hora:"01h",    grupo:"D", timeA:"Australia",        timeB:"Turquia",              local:"Vancouver" },
+  { id:"jogo9",  fase:"grupos_r1", rodada:1, data:"14/06", hora:"14h",    grupo:"E", timeA:"Alemanha",         timeB:"Curacao",              local:"Houston" },
+  { id:"jogo10", fase:"grupos_r1", rodada:1, data:"14/06", hora:"17h",    grupo:"F", timeA:"Holanda",          timeB:"Japao",                local:"Dallas" },
+  { id:"jogo11", fase:"grupos_r1", rodada:1, data:"14/06", hora:"20h",    grupo:"E", timeA:"Costa do Marfim",  timeB:"Equador",              local:"Filadelfia" },
+  { id:"jogo12", fase:"grupos_r1", rodada:1, data:"14/06", hora:"23h",    grupo:"F", timeA:"Suecia",           timeB:"Tunisia",              local:"Monterrey" },
+  { id:"jogo13", fase:"grupos_r1", rodada:1, data:"15/06", hora:"13h",    grupo:"H", timeA:"Espanha",          timeB:"Cabo Verde",           local:"Atlanta" },
+  { id:"jogo14", fase:"grupos_r1", rodada:1, data:"15/06", hora:"16h",    grupo:"G", timeA:"Belgica",          timeB:"Egito",                local:"Seattle" },
+  { id:"jogo15", fase:"grupos_r1", rodada:1, data:"15/06", hora:"19h",    grupo:"H", timeA:"Arabia Saudita",   timeB:"Uruguai",              local:"Miami" },
+  { id:"jogo16", fase:"grupos_r1", rodada:1, data:"15/06", hora:"22h",    grupo:"G", timeA:"Ira",              timeB:"Nova Zelandia",        local:"Los Angeles" },
+  { id:"jogo17", fase:"grupos_r1", rodada:1, data:"16/06", hora:"16h",    grupo:"I", timeA:"Franca",           timeB:"Senegal",              local:"Nova Jersey" },
+  { id:"jogo18", fase:"grupos_r1", rodada:1, data:"16/06", hora:"19h",    grupo:"I", timeA:"Iraque",           timeB:"Noruega",              local:"Boston" },
+  { id:"jogo19", fase:"grupos_r1", rodada:1, data:"16/06", hora:"22h",    grupo:"J", timeA:"Argentina",        timeB:"Algeria",              local:"Kansas City" },
+  { id:"jogo20", fase:"grupos_r1", rodada:1, data:"17/06", hora:"01h",    grupo:"J", timeA:"Austria",          timeB:"Jordania",             local:"Santa Clara" },
+  { id:"jogo21", fase:"grupos_r1", rodada:1, data:"17/06", hora:"14h",    grupo:"K", timeA:"Portugal",         timeB:"Congo",                local:"Houston" },
+  { id:"jogo22", fase:"grupos_r1", rodada:1, data:"17/06", hora:"17h",    grupo:"L", timeA:"Inglaterra",       timeB:"Croacia",              local:"Dallas" },
+  { id:"jogo23", fase:"grupos_r1", rodada:1, data:"17/06", hora:"20h",    grupo:"L", timeA:"Gana",             timeB:"Panama",               local:"Toronto" },
+  { id:"jogo24", fase:"grupos_r1", rodada:1, data:"17/06", hora:"21h",    grupo:"K", timeA:"Uzbequistao",      timeB:"Colombia",             local:"Cidade do Mexico" },
+  // 2 RODADA
+  { id:"jogo25", fase:"grupos_r2", rodada:2, data:"18/06 Qui", hora:"13h",    grupo:"A", timeA:"Tchequia",         timeB:"Africa do Sul",        local:"Atlanta" },
+  { id:"jogo26", fase:"grupos_r2", rodada:2, data:"18/06 Qui", hora:"16h",    grupo:"B", timeA:"Suica",            timeB:"Bosnia & Herzegovina", local:"Los Angeles" },
+  { id:"jogo27", fase:"grupos_r2", rodada:2, data:"18/06 Qui", hora:"19h",    grupo:"B", timeA:"Canada",           timeB:"Qatar",                local:"Vancouver" },
+  { id:"jogo28", fase:"grupos_r2", rodada:2, data:"18/06 Qui", hora:"22h",    grupo:"A", timeA:"Mexico",           timeB:"Coreia do Sul",        local:"Guadalajara" },
+  { id:"jogo29", fase:"grupos_r2", rodada:2, data:"19/06 Sex", hora:"16h",    grupo:"D", timeA:"Estados Unidos",   timeB:"Australia",            local:"Seattle" },
+  { id:"jogo30", fase:"grupos_r2", rodada:2, data:"19/06 Sex", hora:"19h",    grupo:"C", timeA:"Escocia",          timeB:"Marrocos",             local:"Boston" },
+  { id:"jogo31", fase:"grupos_r2", rodada:2, data:"19/06 Sex", hora:"21h30",  grupo:"C", timeA:"Brasil",           timeB:"Haiti",                local:"Filadelfia" },
+  { id:"jogo32", fase:"grupos_r2", rodada:2, data:"20/06 Sab", hora:"00h",    grupo:"D", timeA:"Turquia",          timeB:"Paraguai",             local:"Santa Clara" },
+  { id:"jogo33", fase:"grupos_r2", rodada:2, data:"20/06 Sab", hora:"14h",    grupo:"F", timeA:"Holanda",          timeB:"Suecia",               local:"Houston" },
+  { id:"jogo34", fase:"grupos_r2", rodada:2, data:"20/06 Sab", hora:"17h",    grupo:"E", timeA:"Alemanha",         timeB:"Costa do Marfim",      local:"Toronto" },
+  { id:"jogo35", fase:"grupos_r2", rodada:2, data:"20/06 Sab", hora:"21h",    grupo:"E", timeA:"Equador",          timeB:"Curacao",              local:"Kansas City" },
+  { id:"jogo36", fase:"grupos_r2", rodada:2, data:"20/06 Sab", hora:"23h",    grupo:"F", timeA:"Tunisia",          timeB:"Japao",                local:"Monterrey" },
+  { id:"jogo37", fase:"grupos_r2", rodada:2, data:"21/06 Dom", hora:"13h",    grupo:"H", timeA:"Espanha",          timeB:"Arabia Saudita",       local:"Atlanta" },
+  { id:"jogo38", fase:"grupos_r2", rodada:2, data:"21/06 Dom", hora:"16h",    grupo:"G", timeA:"Belgica",          timeB:"Ira",                  local:"Los Angeles" },
+  { id:"jogo39", fase:"grupos_r2", rodada:2, data:"21/06 Dom", hora:"19h",    grupo:"H", timeA:"Uruguai",          timeB:"Cabo Verde",           local:"Miami" },
+  { id:"jogo40", fase:"grupos_r2", rodada:2, data:"21/06 Dom", hora:"22h",    grupo:"G", timeA:"Nova Zelandia",    timeB:"Egito",                local:"Vancouver" },
+  { id:"jogo41", fase:"grupos_r2", rodada:2, data:"22/06 Seg", hora:"14h",    grupo:"J", timeA:"Argentina",        timeB:"Austria",              local:"Dallas" },
+  { id:"jogo42", fase:"grupos_r2", rodada:2, data:"22/06 Seg", hora:"18h",    grupo:"I", timeA:"Franca",           timeB:"Iraque",               local:"Filadelfia" },
+  { id:"jogo43", fase:"grupos_r2", rodada:2, data:"22/06 Seg", hora:"21h",    grupo:"I", timeA:"Noruega",          timeB:"Senegal",              local:"Nova Jersey" },
+  { id:"jogo44", fase:"grupos_r2", rodada:2, data:"23/06 Ter", hora:"00h",    grupo:"J", timeA:"Jordania",         timeB:"Algeria",              local:"Santa Clara" },
+  { id:"jogo45", fase:"grupos_r2", rodada:2, data:"23/06 Ter", hora:"14h",    grupo:"K", timeA:"Portugal",         timeB:"Uzbequistao",          local:"Houston" },
+  { id:"jogo46", fase:"grupos_r2", rodada:2, data:"23/06 Ter", hora:"17h",    grupo:"L", timeA:"Inglaterra",       timeB:"Gana",                 local:"Boston" },
+  { id:"jogo47", fase:"grupos_r2", rodada:2, data:"23/06 Ter", hora:"20h",    grupo:"L", timeA:"Panama",           timeB:"Croacia",              local:"Toronto" },
+  { id:"jogo48", fase:"grupos_r2", rodada:2, data:"23/06 Ter", hora:"23h",    grupo:"K", timeA:"Colombia",         timeB:"Congo",                local:"Guadalajara" },
+  // 3 RODADA
+  { id:"jogo49", fase:"grupos_r3", rodada:3, data:"24/06 Qua", hora:"16h",    grupo:"B", timeA:"Suica",            timeB:"Canada",               local:"Vancouver" },
+  { id:"jogo50", fase:"grupos_r3", rodada:3, data:"24/06 Qua", hora:"16h",    grupo:"B", timeA:"Bosnia & Herzegovina", timeB:"Qatar",            local:"Seattle" },
+  { id:"jogo51", fase:"grupos_r3", rodada:3, data:"24/06 Qua", hora:"19h",    grupo:"C", timeA:"Escocia",          timeB:"Brasil",               local:"Miami" },
+  { id:"jogo52", fase:"grupos_r3", rodada:3, data:"24/06 Qua", hora:"19h",    grupo:"C", timeA:"Marrocos",         timeB:"Haiti",                local:"Atlanta" },
+  { id:"jogo53", fase:"grupos_r3", rodada:3, data:"24/06 Qua", hora:"22h",    grupo:"A", timeA:"Tchequia",         timeB:"Mexico",               local:"Cidade do Mexico" },
+  { id:"jogo54", fase:"grupos_r3", rodada:3, data:"24/06 Qua", hora:"22h",    grupo:"A", timeA:"Africa do Sul",    timeB:"Coreia do Sul",        local:"Monterrey" },
+  { id:"jogo55", fase:"grupos_r3", rodada:3, data:"25/06 Qui", hora:"17h",    grupo:"E", timeA:"Equador",          timeB:"Alemanha",             local:"Nova Jersey" },
+  { id:"jogo56", fase:"grupos_r3", rodada:3, data:"25/06 Qui", hora:"17h",    grupo:"E", timeA:"Curacao",          timeB:"Costa do Marfim",      local:"Filadelfia" },
+  { id:"jogo57", fase:"grupos_r3", rodada:3, data:"25/06 Qui", hora:"20h",    grupo:"F", timeA:"Japao",            timeB:"Suecia",               local:"Dallas" },
+  { id:"jogo58", fase:"grupos_r3", rodada:3, data:"25/06 Qui", hora:"20h",    grupo:"F", timeA:"Tunisia",          timeB:"Holanda",              local:"Kansas City" },
+  { id:"jogo59", fase:"grupos_r3", rodada:3, data:"25/06 Qui", hora:"23h",    grupo:"D", timeA:"Turquia",          timeB:"Estados Unidos",       local:"Los Angeles" },
+  { id:"jogo60", fase:"grupos_r3", rodada:3, data:"25/06 Qui", hora:"23h",    grupo:"D", timeA:"Paraguai",         timeB:"Australia",            local:"Santa Clara" },
+  { id:"jogo61", fase:"grupos_r3", rodada:3, data:"26/06 Sex", hora:"16h",    grupo:"I", timeA:"Noruega",          timeB:"Franca",               local:"Boston" },
+  { id:"jogo62", fase:"grupos_r3", rodada:3, data:"26/06 Sex", hora:"16h",    grupo:"I", timeA:"Senegal",          timeB:"Iraque",               local:"Toronto" },
+  { id:"jogo63", fase:"grupos_r3", rodada:3, data:"26/06 Sex", hora:"21h",    grupo:"H", timeA:"Cabo Verde",       timeB:"Arabia Saudita",       local:"Houston" },
+  { id:"jogo64", fase:"grupos_r3", rodada:3, data:"26/06 Sex", hora:"21h",    grupo:"H", timeA:"Uruguai",          timeB:"Espanha",              local:"Guadalajara" },
+  { id:"jogo65", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"00h",    grupo:"G", timeA:"Egito",            timeB:"Ira",                  local:"Seattle" },
+  { id:"jogo66", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"00h",    grupo:"G", timeA:"Nova Zelandia",    timeB:"Belgica",              local:"Vancouver" },
+  { id:"jogo67", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"18h",    grupo:"L", timeA:"Panama",           timeB:"Inglaterra",           local:"Nova Jersey" },
+  { id:"jogo68", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"18h",    grupo:"L", timeA:"Croacia",          timeB:"Gana",                 local:"Filadelfia" },
+  { id:"jogo69", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"20h30",  grupo:"K", timeA:"Colombia",         timeB:"Portugal",             local:"Miami" },
+  { id:"jogo70", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"20h30",  grupo:"K", timeA:"Congo",            timeB:"Uzbequistao",          local:"Atlanta" },
+  { id:"jogo71", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"23h",    grupo:"J", timeA:"Algeria",          timeB:"Austria",              local:"Kansas City" },
+  { id:"jogo72", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"23h",    grupo:"J", timeA:"Jordania",         timeB:"Argentina",            local:"Dallas" },
+];
+
+const dezesseisvos = [
+  {id:"M73",confronto:"2 Grupo A x 2 Grupo B"},{id:"M74",confronto:"1 Grupo E x Melhor 3"},
+  {id:"M75",confronto:"1 Grupo F x 2 Grupo C"},{id:"M76",confronto:"1 Grupo C x 2 Grupo F"},
+  {id:"M77",confronto:"1 Grupo I x Melhor 3"},{id:"M78",confronto:"2 Grupo E x 2 Grupo I"},
+  {id:"M79",confronto:"1 Grupo A x Melhor 3"},{id:"M80",confronto:"1 Grupo L x Melhor 3"},
+  {id:"M81",confronto:"1 Grupo D x Melhor 3"},{id:"M82",confronto:"1 Grupo G x Melhor 3"},
+  {id:"M83",confronto:"2 Grupo K x 2 Grupo L"},{id:"M84",confronto:"1 Grupo H x 2 Grupo J"},
+  {id:"M85",confronto:"1 Grupo B x Melhor 3"},{id:"M86",confronto:"1 Grupo J x 2 Grupo H"},
+  {id:"M87",confronto:"1 Grupo K x Melhor 3"},{id:"M88",confronto:"2 Grupo D x 2 Grupo G"},
+];
+const oitavas = [
+  {id:"M89",confronto:"Vencedor M73 x Vencedor M75"},{id:"M90",confronto:"Vencedor M74 x Vencedor M77"},
+  {id:"M91",confronto:"Vencedor M76 x Vencedor M78"},{id:"M92",confronto:"Vencedor M79 x Vencedor M80"},
+  {id:"M93",confronto:"Vencedor M83 x Vencedor M84"},{id:"M94",confronto:"Vencedor M81 x Vencedor M82"},
+  {id:"M95",confronto:"Vencedor M86 x Vencedor M88"},{id:"M96",confronto:"Vencedor M85 x Vencedor M87"},
+];
+
+const resultados = {}; // preenchido via onSnapshot da coleção "resultados" no Firestore
+let faseAtual = "grupos_r1";
+
+// Mapa nome+jogoId -> { docId, placarA, placarB }
+let palpitesDoUsuario = {};
+
+// ─── ESTADO DE AUTENTICAÇÃO PIN ───────────────────────────────────────────
+let usuarioAutenticado = null; // nome autenticado com PIN correto
+
+// Hash simples (djb2) — não é criptografia séria, mas serve pra bolão entre amigos
+function hashPin(pin) {
+  let h = 5381;
+  for (let i = 0; i < pin.length; i++) h = ((h << 5) + h) + pin.charCodeAt(i);
+  return (h >>> 0).toString(16);
+}
+
+// Busca o doc de PIN de um nome no Firestore
+async function buscarPinDoc(nome) {
+  const snap = await getDocs(query(collection(db, "pins"), where("nome", "==", nome)));
+  if (snap.empty) return null;
+  return { id: snap.docs[0].id, ...snap.docs[0].data() };
+}
+
+// Estado do fluxo de PIN
+let pinState = "oculto"; // "oculto" | "novo" | "confirmar"
+let pinNomeAlvo = "";
+
+function getPinValue() {
+  return [0,1,2,3].map(i => document.getElementById("pin"+i).value).join("");
+}
+
+function limparPinInputs(focarPrimeiro = true) {
+  [0,1,2,3].forEach(i => {
+    const el = document.getElementById("pin"+i);
+    el.value = "";
+    el.classList.remove("erro","ok");
+  });
+  if (focarPrimeiro) document.getElementById("pin0").focus();
+}
+
+function mostrarPinSection(modo, nomePessoa) {
+  const section = document.getElementById("pinSection");
+  const label = document.getElementById("pinLabel");
+  const hint = document.getElementById("pinHint");
+  const icon = document.getElementById("pinStatusIcon");
+  pinState = modo;
+  pinNomeAlvo = nomePessoa;
+  limparPinInputs(false);
+  icon.textContent = "";
+  if (modo === "novo") {
+    label.className = "pin-label novo";
+    label.innerHTML = "&#128274; Crie um PIN de 4 dígitos para <strong>" + nomePessoa + "</strong>";
+    hint.textContent = "Você usará esse PIN toda vez que entrar com esse nome.";
+  } else if (modo === "confirmar") {
+    label.className = "pin-label confirmar";
+    label.innerHTML = "&#128273; Digite o PIN de <strong>" + nomePessoa + "</strong>";
+    hint.textContent = "Digite o PIN que você criou para esse nome.";
+  }
+  section.classList.add("visivel");
+}
+
+function ocultarPinSection() {
+  document.getElementById("pinSection").classList.remove("visivel");
+  limparPinInputs(false);
+  pinState = "oculto";
+  pinNomeAlvo = "";
+}
+
+function mostrarPinErro() {
+  [0,1,2,3].forEach(i => document.getElementById("pin"+i).classList.add("erro"));
+  document.getElementById("pinStatusIcon").textContent = "❌";
+  const label = document.getElementById("pinLabel");
+  label.className = "pin-label erro";
+  label.textContent = "PIN incorreto — tente novamente";
+  setTimeout(() => limparPinInputs(true), 900);
+}
+
+async function autenticarComPin(pin) {
+  const nome = pinNomeAlvo;
+  if (pinState === "novo") {
+    // Criar PIN novo — usa ID determinístico pra evitar duplicatas
+    const pinId = nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+    [0,1,2,3].forEach(i => document.getElementById("pin"+i).classList.add("ok"));
+    document.getElementById("pinStatusIcon").textContent = "✅";
+    await setDoc(doc(db, "pins", pinId), { nome, pinHash: hashPin(pin) });
+    setTimeout(() => entrarComoUsuario(nome), 500);
+  } else if (pinState === "confirmar") {
+    // Verificar PIN
+    const pinDoc = await buscarPinDoc(nome);
+    if (pinDoc && pinDoc.pinHash === hashPin(pin)) {
+      [0,1,2,3].forEach(i => document.getElementById("pin"+i).classList.add("ok"));
+      document.getElementById("pinStatusIcon").textContent = "✅";
+      setTimeout(() => entrarComoUsuario(nome), 500);
+    } else {
+      mostrarPinErro();
+    }
+  }
+}
+
+function entrarComoUsuario(nome) {
+  usuarioAutenticado = nome;
+  sessionStorage.setItem("bolao_usuario", nome);
+  document.getElementById("nomeSection").style.display = "none";
+  ocultarPinSection();
+  document.getElementById("usuarioLogadoSection").style.display = "block";
+  document.getElementById("usuarioLogadoNome").textContent = "⚽ " + nome;
+  document.getElementById("nome").value = nome;
+  carregarPalpitesUsuario(nome);
+  mostrarToast("Bem-vindo, " + nome + "! 🎉");
+}
+
+window.fazerLogout = function() {
+  usuarioAutenticado = null;
+  palpitesDoUsuario = {};
+  sessionStorage.removeItem("bolao_usuario");
+  document.getElementById("nome").value = "";
+  document.getElementById("nomeSection").style.display = "block";
+  document.getElementById("usuarioLogadoSection").style.display = "none";
+  ocultarPinSection();
+  mostrarJogos();
+};
+
+// ─── Lógica dos inputs de PIN ──────────────────────────────────────────────
+function setupPinInputs() {
+  [0,1,2,3].forEach(i => {
+    const el = document.getElementById("pin"+i);
+    el.addEventListener("input", async function() {
+      // Garante só 1 dígito
+      if (this.value.length > 1) this.value = this.value.slice(-1);
+      if (this.value !== "" && i < 3) document.getElementById("pin"+(i+1)).focus();
+      // Ao preencher o 4º dígito, verifica
+      if (i === 3 && getPinValue().length === 4) {
+        await autenticarComPin(getPinValue());
+      }
+    });
+    el.addEventListener("keydown", function(e) {
+      if (e.key === "Backspace" && this.value === "" && i > 0) {
+        document.getElementById("pin"+(i-1)).focus();
+      }
+      // Bloqueia não-numéricos
+      if (!/[0-9]/.test(e.key) && !["Backspace","Tab","ArrowLeft","ArrowRight"].includes(e.key)) {
+        e.preventDefault();
+      }
+    });
+    el.addEventListener("paste", function(e) {
+      e.preventDefault();
+      const txt = (e.clipboardData || window.clipboardData).getData("text").replace(/\D/g,"").slice(0,4);
+      txt.split("").forEach((c, j) => {
+        if (j <= 3) document.getElementById("pin"+j).value = c;
+      });
+      if (txt.length === 4) autenticarComPin(txt);
+    });
+  });
+}
+
+// Calcula o timestamp de kickoff de um jogo a partir de data/hora textuais
+function jogoKickoff(jogo) {
+  // data ex: "11/06", "18/06 Qui" | hora ex: "16h", "21h30"
+  const anoBase = 2026;
+  const dataParte = jogo.data.split(' ')[0]; // "11/06"
+  const [dia, mes] = dataParte.split('/').map(Number);
+  const horaParte = jogo.hora.replace('h', ':').replace(/(\d+):(\d*)/, (_, h, m) => h.padStart(2,'0')+':'+(m||'00'));
+  const [hh, mm] = horaParte.split(':').map(Number);
+  // Hora no HTML está em horário local BRT (-3), então subtraímos 3h para UTC
+  return new Date(Date.UTC(anoBase, mes-1, dia, hh+3, mm));
+}
+
+function jogoEstaAberto(jogo) {
+  const fase = FASES.find(f => f.id === jogo.fase);
+  if (!fase || !faseEstaAberta(fase)) return false;
+  return new Date() < jogoKickoff(jogo);
+}
+
+// Carrega palpites do usuário atual do Firebase
+async function carregarPalpitesUsuario(nome) {
+  palpitesDoUsuario = {};
+  if (!nome) { mostrarJogos(); return; }
+  try {
+    const q = query(collection(db, "palpites"), where("nome", "==", nome));
+    const snap = await getDocs(q);
+    snap.forEach(d => {
+      const p = d.data();
+      palpitesDoUsuario[p.jogoId] = { docId: d.id, placarA: p.placarA, placarB: p.placarB };
+    });
+  } catch(e) { console.error(e); }
+  mostrarJogos();
+}
+
+// ─── Pontuacao ────────────────────────────────────────────────────────────
+function calcularPontos(p, r) {
+  if (!r) return null;
+  const pA=parseInt(p.placarA), pB=parseInt(p.placarB), rA=r.placarA, rB=r.placarB;
+  if (pA===rA && pB===rB) return 25;
+  const vP=pA>pB?'A':pA<pB?'B':'E', vR=rA>rB?'A':rA<rB?'B':'E';
+  if (vP!==vR) return 0;
+  if ((pA-pB)===(rA-rB)) return 15;
+  return 10;
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────
+function faseEstaAberta(f) { return f.prazoFim ? new Date() < f.prazoFim : false; }
+function faseEstaVisivel(f) { return new Date() >= f.visivelDe; }
+
+function formatarCountdown(ms) {
+  if (ms<=0) return "ENCERRADO";
+  const s=Math.floor(ms/1000), d=Math.floor(s/86400), h=Math.floor((s%86400)/3600),
+        m=Math.floor((s%3600)/60), sec=s%60;
+  if (d>0) return d+"d "+pad(h)+"h "+pad(m)+"m";
+  return pad(h)+":"+pad(m)+":"+pad(sec);
+}
+function pad(n){ return n.toString().padStart(2,'0'); }
+
+// ─── Nav de fases ─────────────────────────────────────────────────────────
+function renderizarFaseNav() {
+  const nav = document.getElementById("faseNav");
+  nav.innerHTML = "";
+  FASES.forEach(fase => {
+    const visivel = faseEstaVisivel(fase);
+    const btn = document.createElement("button");
+    btn.className = "fase-btn" + (faseAtual===fase.id?" ativo":"") + (!visivel?" bloqueado":"");
+
+    let badgeHtml = "";
+    if (fase.tipo==="grupos" && visivel) {
+      badgeHtml = faseEstaAberta(fase)
+        ? '<span class="aba-badge aberto">ABERTO</span>'
+        : '<span class="aba-badge fechado">ENCERRADO</span>';
+    } else if (fase.tipo==="mata" && visivel) {
+      badgeHtml = '<span class="aba-badge aguarda">EM BREVE</span>';
+    } else if (!visivel) {
+      badgeHtml = '<span class="aba-badge aguarda">BLOQUEADO</span>';
+    }
+
+    btn.innerHTML = "<span>" + fase.nome + "</span>" + badgeHtml;
+
+    if (visivel) {
+      btn.onclick = () => { faseAtual=fase.id; renderizarFaseNav(); mostrarJogos(); atualizarBannerPrazo(); };
+    }
+    nav.appendChild(btn);
+  });
+}
+
+// ─── Banner prazo ─────────────────────────────────────────────────────────
+function atualizarBannerPrazo() {
+  const banner=document.getElementById("prazoBanner");
+  const titulo=document.getElementById("prazoTitulo");
+  const detalhe=document.getElementById("prazoDetalhe");
+  const countdown=document.getElementById("prazoCountdown");
+  const fase=FASES.find(f=>f.id===faseAtual);
+  if (!fase) return;
+  if (fase.tipo==="mata") {
+    banner.className="prazo-card aguardando";
+    titulo.textContent="Aguardando definicao do chaveamento";
+    detalhe.textContent="As datas desta fase serao anunciadas em breve.";
+    countdown.textContent=""; return;
+  }
+  const aberto=faseEstaAberta(fase);
+  if (aberto) {
+    const restante=fase.prazoFim-new Date();
+    banner.className="prazo-card aberto";
+    titulo.textContent="Palpites abertos!";
+    detalhe.textContent="Prazo: "+fase.prazoFim.toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'})+" (Brasilia)";
+    countdown.textContent=formatarCountdown(restante);
+  } else {
+    banner.className="prazo-card encerrado";
+    titulo.textContent="Prazo encerrado para esta rodada";
+    detalhe.textContent="Palpites encerrados em: "+fase.prazoFim.toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});
+    countdown.textContent="";
+  }
+}
+
+// ─── Mostrar jogos ────────────────────────────────────────────────────────
+function mostrarJogos() {
+  const lista=document.getElementById("listaJogos");
+  lista.innerHTML="";
+  const fase=FASES.find(f=>f.id===faseAtual);
+
+  // ── Barra de progresso de palpites ──
+  if (usuarioAutenticado && fase && fase.tipo==="grupos") {
+    const jogosFase = jogos.filter(j=>j.fase===faseAtual);
+    const total = jogosFase.length;
+    const feitos = jogosFase.filter(j=>palpitesDoUsuario[j.id]).length;
+    const pct = total>0 ? Math.round(feitos/total*100) : 0;
+    document.getElementById("progressoWrap").style.display = "block";
+    document.getElementById("progressoTexto").textContent = feitos + " / " + total + " jogos";
+    document.getElementById("progressoBarra").style.width = pct + "%";
+  } else {
+    document.getElementById("progressoWrap").style.display = "none";
+  }
+
+  if (fase && fase.tipo==="mata") {
+    const wrap=document.createElement('div');
+    wrap.className="chaveamento";
+    wrap.innerHTML='<div class="mata-mata-aviso"><h3>Em Preparacao</h3><p>O chaveamento sera definido apos a fase de grupos. As datas serao anunciadas em breve!</p></div>';
+
+    const t16=document.createElement('div'); t16.className="chave-titulo"; t16.textContent="16AVOS DE FINAL";
+    wrap.appendChild(t16);
+    const g16=document.createElement('div'); g16.className="chave-grid";
+    dezesseisvos.forEach(j=>{
+      const el=document.createElement('div'); el.className="chave-jogo";
+      el.innerHTML='<div class="chave-jogo-id">'+j.id+'</div><div class="chave-confronto">'+j.confronto+'</div>';
+      g16.appendChild(el);
+    });
+    wrap.appendChild(g16);
+
+    if (faseAtual==="oitavas") {
+      const t8=document.createElement('div'); t8.className="chave-titulo"; t8.textContent="OITAVAS DE FINAL";
+      wrap.appendChild(t8);
+      const g8=document.createElement('div'); g8.className="chave-grid";
+      oitavas.forEach(j=>{
+        const el=document.createElement('div'); el.className="chave-jogo";
+        el.innerHTML='<div class="chave-jogo-id">'+j.id+'</div><div class="chave-confronto">'+j.confronto+'</div>';
+        g8.appendChild(el);
+      });
+      wrap.appendChild(g8);
+    }
+    lista.appendChild(wrap); return;
+  }
+
+  const jogosFase=jogos.filter(j=>j.fase===faseAtual);
+  const aberto=fase?faseEstaAberta(fase):false;
+  const porData={};
+  jogosFase.forEach(j=>{ if(!porData[j.data]) porData[j.data]=[]; porData[j.data].push(j); });
+
+  for (const data in porData) {
+    const bloco=document.createElement('div');
+    const safeId="data-"+data.replace(/[\/ ]/g,'-');
+    bloco.innerHTML='<div class="rodada-header"><div class="rodada-titulo">&#128197; '+data+'</div><div class="rodada-linha"></div></div><div class="jogos-grid" id="'+safeId+'"></div>';
+    lista.appendChild(bloco);
+    const grid=document.getElementById(safeId);
+    porData[data].forEach(jogo=>{
+      const card=document.createElement('div');
+      card.className="jogo-card"+(aberto?"":" bloqueado");
+      card.id="card-"+jogo.id;
+
+      const palpiteExist = palpitesDoUsuario[jogo.id];
+      const jogoAberto = jogoEstaAberto(jogo);
+      const pA_val = palpiteExist ? palpiteExist.placarA : '';
+      const pB_val = palpiteExist ? palpiteExist.placarB : '';
+      const inputDisabled = (!aberto || !jogoAberto) ? ' disabled' : '';
+
+      let btnHtml;
+      if (!aberto || !jogoAberto) {
+        if (palpiteExist) {
+          btnHtml = '<button class="btn-salvar btn-salvo" disabled style="opacity:0.7;cursor:not-allowed;">&#10003; '+palpiteExist.placarA+'x'+palpiteExist.placarB+' — Encerrado</button>';
+        } else {
+          btnHtml = '<button class="btn-salvar" disabled style="opacity:0.4;cursor:not-allowed;">Prazo Encerrado</button>';
+        }
+      } else if (palpiteExist) {
+        btnHtml = '<button class="btn-salvar" style="background:rgba(245,197,24,0.15);border:1px solid var(--ouro);color:var(--ouro);" onclick="window.salvarPalpite(\''+jogo.id+'\')">&#9998; Atualizar Palpite</button>';
+      } else {
+        btnHtml = '<button class="btn-salvar" onclick="window.salvarPalpite(\''+jogo.id+'\')">Salvar Palpite</button>';
+      }
+
+      card.innerHTML=
+        '<div class="jogo-data"><span class="jogo-data-dot"></span>'+jogo.hora+
+        '<span style="margin-left:auto;background:rgba(0,166,81,0.15);border:1px solid var(--borda-brilho);border-radius:4px;padding:1px 8px;font-size:11px;letter-spacing:1px;color:var(--verde);">GRUPO '+jogo.grupo+'</span></div>'+
+        '<div style="font-size:11px;color:var(--texto-muted);letter-spacing:1px;margin-bottom:12px;">&#128205; '+jogo.local+'</div>'+
+        '<div class="jogo-times"><div class="time-nome">'+jogo.timeA+'</div><div class="jogo-vs">VS</div><div class="time-nome">'+jogo.timeB+'</div></div>'+
+        '<div class="placar-inputs">'+
+        '<input type="number" class="placar-input" id="'+jogo.id+'-A" placeholder="0" min="0" max="99" value="'+pA_val+'"'+inputDisabled+'>'+
+        '<div class="placar-sep">x</div>'+
+        '<input type="number" class="placar-input" id="'+jogo.id+'-B" placeholder="0" min="0" max="99" value="'+pB_val+'"'+inputDisabled+'>'+
+        '</div>'+
+        btnHtml;
+      grid.appendChild(card);
+    });
+  }
+}
+
+// ─── Salvar palpite ───────────────────────────────────────────────────────
+async function salvarPalpite(idJogo) {
+  if (!usuarioAutenticado) { mostrarToast("Faça login com seu nome e PIN primeiro!", true); return; }
+  const nome = usuarioAutenticado;
+  const fase=FASES.find(f=>f.id===faseAtual);
+  if (!fase||!faseEstaAberta(fase)) { mostrarToast("Prazo encerrado!", true); return; }
+  const jogo=jogos.find(j=>j.id===idJogo);
+  if (!jogoEstaAberto(jogo)) { mostrarToast("Este jogo ja comecou!", true); return; }
+  const pA=document.getElementById(idJogo+"-A").value;
+  const pB=document.getElementById(idJogo+"-B").value;
+  if (pA===""||pB==="") { mostrarToast("Preencha o placar!", true); return; }
+
+  const dados = {
+    nome, jogoId:jogo.id, rodada:jogo.rodada, fase:jogo.fase,
+    data:jogo.data, timeA:jogo.timeA, timeB:jogo.timeB,
+    placarA:parseInt(pA), placarB:parseInt(pB), criadoEm:new Date()
+  };
+
+  try {
+    const existente = palpitesDoUsuario[idJogo];
+    if (existente) {
+      // Atualizar palpite existente
+      await setDoc(doc(db,"palpites",existente.docId), dados);
+      palpitesDoUsuario[idJogo] = { docId: existente.docId, placarA: parseInt(pA), placarB: parseInt(pB) };
+      mostrarToast("Palpite atualizado! "+jogo.timeA+" "+pA+"x"+pB+" "+jogo.timeB);
+    } else {
+      // Novo palpite
+      const ref = await addDoc(collection(db,"palpites"), dados);
+      palpitesDoUsuario[idJogo] = { docId: ref.id, placarA: parseInt(pA), placarB: parseInt(pB) };
+      mostrarToast("Palpite salvo! "+jogo.timeA+" "+pA+"x"+pB+" "+jogo.timeB);
+    }
+    // Atualiza o botão para modo "Atualizar"
+    const btn=document.querySelector("#card-"+idJogo+" .btn-salvar");
+    btn.style.background='rgba(245,197,24,0.15)';
+    btn.style.borderColor='var(--ouro)';
+    btn.style.color='var(--ouro)';
+    btn.textContent='✎ Atualizar Palpite';
+  } catch(e) { console.error(e); mostrarToast("Erro ao salvar.",true); }
+}
+
+// ─── Ranking ──────────────────────────────────────────────────────────────
+function calcularRanking(palpites) {
+  const j={};
+  palpites.forEach(p=>{
+    if(!j[p.nome]) j[p.nome]={nome:p.nome,pontos:0,acertos:0,exatos:0,total:0};
+    j[p.nome].total++;
+    const r=resultados[p.jogoId];
+    if(r){const pts=calcularPontos(p,r);j[p.nome].pontos+=pts;if(pts>0)j[p.nome].acertos++;if(pts===25)j[p.nome].exatos++;}
+  });
+  return Object.values(j).sort((a,b)=>b.pontos-a.pontos||b.acertos-a.acertos);
+}
+function renderizarRanking(ranking) {
+  const lista=document.getElementById("rankingLista");
+  if(!ranking.length){lista.innerHTML='<div class="vazio">Nenhum palpite ainda</div>';return;}
+  const medalhas=["&#129351;","&#129352;","&#129353;"];
+  lista.innerHTML=ranking.map((j,i)=>'<div class="ranking-item pos'+(i<3?i+1:'')+'" style="animation-delay:'+i*0.06+'s">'+
+    '<div class="ranking-pos">'+(i+1).toString().padStart(2,'0')+'</div>'+
+    '<div class="ranking-medalha">'+(medalhas[i]||"")+'</div>'+
+    '<div class="ranking-nome">'+j.nome+'</div>'+
+    '<div class="ranking-stats">'+
+    '<div class="stat"><span class="stat-valor">'+j.acertos+'</span><span class="stat-label">Acertos</span></div>'+
+    '<div class="stat"><span class="stat-valor">'+j.exatos+'</span><span class="stat-label">Exatos</span></div>'+
+    '<div class="stat"><span class="stat-valor">'+j.total+'</span><span class="stat-label">Palpites</span></div>'+
+    '</div>'+
+    '<div><div class="ranking-pontos">'+j.pontos+'</div><div class="ranking-pts-label">pts</div></div>'+
+    '</div>').join('');
+}
+
+// ─── Feed ─────────────────────────────────────────────────────────────────
+function renderizarFeed(palpites) {
+  const lista=document.getElementById("feedLista");
+  document.getElementById("totalPalpites").textContent=palpites.length+" palpite"+(palpites.length!==1?"s":"");
+  if(!palpites.length){lista.innerHTML='<div class="vazio">Nenhum palpite ainda. Seja o primeiro!</div>';return;}
+  lista.innerHTML=palpites.map((p,i)=>{
+    const ini=p.nome.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+    const t=formatarTempo(p.criadoEm?.toDate?p.criadoEm.toDate():new Date(p.criadoEm));
+    return '<div class="feed-item" style="animation-delay:'+i*0.04+'s">'+
+      '<div class="feed-avatar">'+ini+'</div>'+
+      '<div class="feed-nome">'+p.nome+'</div>'+
+      '<div class="feed-jogo">'+p.timeA+' x '+p.timeB+'</div>'+
+      '<div class="feed-placar">'+p.placarA+' x '+p.placarB+'</div>'+
+      '<div class="feed-hora">'+t+'</div></div>';
+  }).join('');
+}
+function formatarTempo(d) {
+  if(!d) return '';
+  const s=Math.floor((new Date()-d)/1000);
+  if(s<60) return 'agora'; if(s<3600) return Math.floor(s/60)+'m';
+  if(s<86400) return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d';
+}
+
+// ─── Toast ────────────────────────────────────────────────────────────────
+function mostrarToast(msg, erro=false) {
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.className="toast "+(erro?"erro":"")+" show";
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+// ─── Tab switcher ─────────────────────────────────────────────────────────
+window.trocarTab=function(id,btn){
+  document.querySelectorAll('.painel').forEach(p=>p.classList.remove('ativo'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('ativo'));
+  document.getElementById('painel-'+id).classList.add('ativo');
+  btn.classList.add('ativo');
+};
+
+// ─── Tick a cada segundo ──────────────────────────────────────────────────
+setInterval(()=>{ atualizarBannerPrazo(); renderizarFaseNav(); }, 1000);
+
+// ─── Iniciar ──────────────────────────────────────────────────────────────
+function iniciar() {
+  renderizarFaseNav();
+  mostrarJogos();
+  atualizarBannerPrazo();
+  setupPinInputs();
+
+  // Restaurar sessão do sessionStorage
+  const nomeSalvo = sessionStorage.getItem("bolao_usuario");
+  if (nomeSalvo) {
+    // Silently restore without toast
+    usuarioAutenticado = nomeSalvo;
+    document.getElementById("nomeSection").style.display = "none";
+    document.getElementById("usuarioLogadoSection").style.display = "block";
+    document.getElementById("usuarioLogadoNome").textContent = "⚽ " + nomeSalvo;
+    document.getElementById("nome").value = nomeSalvo;
+    carregarPalpitesUsuario(nomeSalvo);
+  }
+
+  // Listener no campo nome: ao digitar e pausar, verifica se nome tem PIN ou é novo
+  let nomeDebounce;
+  document.getElementById("nome").addEventListener("input", function() {
+    clearTimeout(nomeDebounce);
+    const nome = this.value.trim();
+    if (nome.length < 2) { ocultarPinSection(); return; }
+    nomeDebounce = setTimeout(async () => {
+      const pinDoc = await buscarPinDoc(nome);
+      if (pinDoc) {
+        mostrarPinSection("confirmar", nome);
+      } else {
+        mostrarPinSection("novo", nome);
+      }
+      document.getElementById("pin0").focus();
+    }, 300);
+  });
+
+  // Listener em tempo real dos resultados (para o ranking funcionar)
+  onSnapshot(collection(db,"resultados"), snap=>{
+    snap.docs.forEach(d=>{ resultados[d.id] = d.data(); });
+    // Re-renderiza ranking com resultados atualizados
+    const qp = query(collection(db,"palpites"),orderBy("criadoEm","desc"));
+    getDocs(qp).then(s=>{
+      const todos = s.docs.map(d=>d.data());
+      renderizarRanking(calcularRanking(todos));
+    });
+  });
+
+  // Listener em tempo real de palpites (feed + ranking)
+  const q=query(collection(db,"palpites"),orderBy("criadoEm","desc"));
+  onSnapshot(q,snap=>{
+    const todos=snap.docs.map(d=>d.data());
+    // Deduplicar por nome+jogoId (fica só o mais recente — já vem desc)
+    const vistos = new Set();
+    const dedup = todos.filter(p=>{
+      const chave = p.nome+"|"+p.jogoId;
+      if (vistos.has(chave)) return false;
+      vistos.add(chave);
+      return true;
+    });
+    renderizarFeed(dedup);
+    renderizarRanking(calcularRanking(dedup));
+  });
+}
+
+// ─── Admin ────────────────────────────────────────────────────────────────
+const ADMIN_SENHA_HASH = hashPin("1234"); // TROQUE AQUI: coloque sua senha de 4 dígitos
+let adminAutenticado = false;
+
+window.verificarAdmin = function() {
+  const senha = document.getElementById("adminSenha").value;
+  if (hashPin(senha) === ADMIN_SENHA_HASH) {
+    adminAutenticado = true;
+    document.getElementById("adminLogin").style.display = "none";
+    document.getElementById("adminPainel").style.display = "block";
+    preencherSelectJogos();
+    carregarResultadosAdmin();
+  } else {
+    document.getElementById("adminLoginErro").style.display = "block";
+  }
+};
+
+document.getElementById("adminSenha").addEventListener("keydown", e => {
+  if (e.key === "Enter") window.verificarAdmin();
+});
+
+function preencherSelectJogos() {
+  const sel = document.getElementById("adminJogoSelect");
+  sel.innerHTML = '<option value="">— escolha um jogo —</option>';
+  jogos.forEach(j => {
+    const opt = document.createElement("option");
+    opt.value = j.id;
+    opt.textContent = j.data + " | " + j.grupo + " | " + j.timeA + " x " + j.timeB;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener("change", function() {
+    const jogo = jogos.find(j => j.id === this.value);
+    const info = document.getElementById("adminJogoInfo");
+    if (!jogo) { info.style.display = "none"; return; }
+    info.style.display = "block";
+    document.getElementById("adminJogoTimes").textContent = jogo.timeA + "  ×  " + jogo.timeB;
+    // Mostrar resultado atual se existir
+    const r = resultados[jogo.id];
+    const atual = document.getElementById("adminResultadoAtual");
+    if (r) {
+      atual.textContent = "Resultado atual: " + r.placarA + " x " + r.placarB;
+      document.getElementById("adminPlacarA").value = r.placarA;
+      document.getElementById("adminPlacarB").value = r.placarB;
+    } else {
+      atual.textContent = "Sem resultado inserido ainda";
+      document.getElementById("adminPlacarA").value = "";
+      document.getElementById("adminPlacarB").value = "";
+    }
+  });
+}
+
+window.salvarResultado = async function() {
+  if (!adminAutenticado) return;
+  const jogoId = document.getElementById("adminJogoSelect").value;
+  if (!jogoId) { mostrarToast("Selecione um jogo!", true); return; }
+  const pA = document.getElementById("adminPlacarA").value;
+  const pB = document.getElementById("adminPlacarB").value;
+  if (pA === "" || pB === "") { mostrarToast("Preencha o placar!", true); return; }
+  try {
+    await setDoc(doc(db, "resultados", jogoId), {
+      jogoId,
+      placarA: parseInt(pA),
+      placarB: parseInt(pB),
+      atualizadoEm: new Date()
+    });
+    resultados[jogoId] = { placarA: parseInt(pA), placarB: parseInt(pB) };
+    document.getElementById("adminResultadoAtual").textContent = "Resultado atual: " + pA + " x " + pB;
+    mostrarToast("Resultado salvo! " + pA + " x " + pB);
+    carregarResultadosAdmin();
+  } catch(e) { console.error(e); mostrarToast("Erro ao salvar resultado.", true); }
+};
+
+function carregarResultadosAdmin() {
+  onSnapshot(collection(db,"resultados"), snap=>{
+    const lista = document.getElementById("adminResultadosList");
+    if (!lista) return;
+    if (snap.empty) { lista.innerHTML = '<div class="vazio">Nenhum resultado inserido ainda.</div>'; return; }
+    const items = snap.docs.map(d => {
+      const r = d.data();
+      const jogo = jogos.find(j => j.id === r.jogoId);
+      const label = jogo ? (jogo.timeA + " x " + jogo.timeB) : r.jogoId;
+      return `<div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--superficie);border:1px solid var(--borda);border-radius:8px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--texto);flex:1;letter-spacing:0.5px;">${label}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ouro);background:var(--fundo2);border:1px solid var(--borda-brilho);border-radius:6px;padding:2px 12px;">${r.placarA} x ${r.placarB}</div>
+        <button onclick="window.excluirResultado('${r.jogoId}')" style="padding:4px 10px;border:1px solid var(--vermelho);background:transparent;color:var(--vermelho);border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;">✕</button>
+      </div>`;
+    });
+    lista.innerHTML = items.join('');
+  });
+}
+
+window.excluirResultado = async function(jogoId) {
+  if (!adminAutenticado) return;
+  if (!confirm("Remover resultado de " + jogoId + "?")) return;
+  try {
+    await deleteDoc(doc(db, "resultados", jogoId));
+    delete resultados[jogoId];
+    mostrarToast("Resultado removido.");
+  } catch(e) { console.error(e); mostrarToast("Erro ao remover.", true); }
+};
+
+window.salvarPalpite=salvarPalpite;
+iniciar();
+</script>
+</body>
+</html>
