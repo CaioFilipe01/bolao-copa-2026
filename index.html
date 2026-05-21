@@ -241,6 +241,8 @@
       <div class="feed-titulo">Palpites ao Vivo</div>
       <span class="feed-badge" id="totalPalpites">0 palpites</span>
     </div>
+    <!-- Abas de pessoa -->
+    <div class="feed-pessoas-nav" id="feedPessoasNav"></div>
     <div id="feedLista" class="feed-lista">
       <div class="loading">Carregando...</div>
     </div>
@@ -898,19 +900,52 @@ function renderizarRanking(ranking) {
 }
 
 // ─── Feed ─────────────────────────────────────────────────────────────────
+let feedPessoaAtiva = "todos";
+let todosOsPalpitesFeed = [];
+
+function renderizarFeedPessoasNav(palpites) {
+  const nav = document.getElementById("feedPessoasNav");
+  // Coleta nomes únicos
+  const nomes = [...new Set(palpites.map(p => p.nome))].sort();
+  let html = `<button class="feed-pessoa-btn${feedPessoaAtiva==='todos'?' ativo':''}" onclick="window.filtrarFeedPessoa('todos')">👥 Todos</button>`;
+  nomes.forEach(nome => {
+    const ini = nome.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+    const ativo = feedPessoaAtiva === nome ? ' ativo' : '';
+    html += `<button class="feed-pessoa-btn${ativo}" onclick="window.filtrarFeedPessoa('${nome.replace(/'/g,"\\'")}')"><span class="feed-pessoa-ini">${ini}</span>${nome.split(' ')[0]}</button>`;
+  });
+  nav.innerHTML = html;
+}
+
+window.filtrarFeedPessoa = function(nome) {
+  feedPessoaAtiva = nome;
+  renderizarFeedPessoasNav(todosOsPalpitesFeed);
+  const filtrados = nome === 'todos' ? todosOsPalpitesFeed : todosOsPalpitesFeed.filter(p => p.nome === nome);
+  renderizarFeedLista(filtrados);
+};
+
 function renderizarFeed(palpites) {
-  const lista=document.getElementById("feedLista");
-  document.getElementById("totalPalpites").textContent=palpites.length+" palpite"+(palpites.length!==1?"s":"");
-  if(!palpites.length){lista.innerHTML='<div class="vazio">Nenhum palpite ainda. Seja o primeiro!</div>';return;}
-  lista.innerHTML=palpites.map((p,i)=>{
-    const ini=p.nome.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
-    const t=formatarTempo(p.criadoEm?.toDate?p.criadoEm.toDate():new Date(p.criadoEm));
-    return '<div class="feed-item" style="animation-delay:'+i*0.04+'s">'+
-      '<div class="feed-avatar">'+ini+'</div>'+
-      '<div class="feed-nome">'+p.nome+'</div>'+
-      '<div class="feed-jogo">'+p.timeA+' x '+p.timeB+'</div>'+
-      '<div class="feed-placar">'+p.placarA+' x '+p.placarB+'</div>'+
-      '<div class="feed-hora">'+t+'</div></div>';
+  todosOsPalpitesFeed = palpites;
+  document.getElementById("totalPalpites").textContent = palpites.length + " palpite" + (palpites.length !== 1 ? "s" : "");
+  renderizarFeedPessoasNav(palpites);
+  const filtrados = feedPessoaAtiva === 'todos' ? palpites : palpites.filter(p => p.nome === feedPessoaAtiva);
+  renderizarFeedLista(filtrados);
+}
+
+function renderizarFeedLista(palpites) {
+  const lista = document.getElementById("feedLista");
+  if (!palpites.length) { lista.innerHTML = '<div class="vazio">Nenhum palpite ainda. Seja o primeiro!</div>'; return; }
+  lista.innerHTML = palpites.map((p, i) => {
+    const ini = p.nome.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+    const t = formatarTempo(p.criadoEm?.toDate ? p.criadoEm.toDate() : new Date(p.criadoEm));
+    return `<div class="feed-item" style="animation-delay:${i*0.04}s">
+      <div class="feed-avatar">${ini}</div>
+      <div class="feed-info">
+        <div class="feed-nome">${p.nome}</div>
+        <div class="feed-jogo-mobile">${p.timeA} × ${p.timeB}</div>
+      </div>
+      <div class="feed-placar">${p.placarA} × ${p.placarB}</div>
+      <div class="feed-hora">${t}</div>
+    </div>`;
   }).join('');
 }
 function formatarTempo(d) {
