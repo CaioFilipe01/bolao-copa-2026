@@ -106,8 +106,9 @@
       overflow: hidden;
       max-height: 0; opacity: 0;
       transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease;
+      width: 100%;
     }
-    .pin-section.visivel { max-height: 120px; opacity: 1; margin-top: 0; }
+    .pin-section.visivel { max-height: 160px; opacity: 1; margin-top: 0; }
 
     .pin-label {
       font-family: 'Barlow Condensed', sans-serif;
@@ -138,6 +139,14 @@
       0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)}
     }
     .pin-status-icon { font-size: 22px; margin-left: 6px; }
+    .btn-confirmar-pin {
+      width: 48px; height: 56px;
+      border-radius: 8px; border: 1px solid var(--verde);
+      background: rgba(0,166,81,0.15); color: var(--verde);
+      font-size: 20px; cursor: pointer; transition: all 0.2s;
+      flex-shrink: 0; margin-left: 4px;
+    }
+    .btn-confirmar-pin:hover { background: rgba(0,166,81,0.28); }
     .pin-hint { font-size: 12px; color: var(--texto-muted); margin-top: 6px; letter-spacing: 0.5px; }
     .usuario-logado {
       display: flex; align-items: center; gap: 10px;
@@ -168,6 +177,9 @@
   <label class="nome-label" for="nome">Seu nome no bolao</label>
   <div class="nome-input-wrap">
     <input type="text" id="nome" placeholder="Digite seu nome para entrar" autocomplete="off">
+    <button class="btn-confirmar-nome" id="btnConfirmarNome" onclick="window.confirmarNome()" style="display:none;">
+      Entrar →
+    </button>
   </div>
 </div>
 
@@ -180,6 +192,7 @@
     <input class="pin-digito" id="pin2" type="number" min="0" max="9" placeholder="·" maxlength="1">
     <input class="pin-digito" id="pin3" type="number" min="0" max="9" placeholder="·" maxlength="1">
     <span class="pin-status-icon" id="pinStatusIcon"></span>
+    <button class="btn-confirmar-pin" id="btnConfirmarPin" onclick="window.confirmarPinManual()" title="Confirmar PIN">✓</button>
   </div>
   <div class="pin-hint" id="pinHint">O PIN protege seu nome — só você consegue palpitar com ele.</div>
 </div>
@@ -592,7 +605,7 @@ function setupPinInputs() {
       // Garante só 1 dígito
       if (this.value.length > 1) this.value = this.value.slice(-1);
       if (this.value !== "" && i < 3) document.getElementById("pin"+(i+1)).focus();
-      // Ao preencher o 4º dígito, verifica
+      // Ao preencher o 4º dígito, verifica automaticamente
       if (i === 3 && getPinValue().length === 4) {
         await autenticarComPin(getPinValue());
       }
@@ -600,6 +613,10 @@ function setupPinInputs() {
     el.addEventListener("keydown", function(e) {
       if (e.key === "Backspace" && this.value === "" && i > 0) {
         document.getElementById("pin"+(i-1)).focus();
+      }
+      // Enter no último campo confirma
+      if (e.key === "Enter" && getPinValue().length === 4) {
+        autenticarComPin(getPinValue());
       }
       // Bloqueia não-numéricos
       if (!/[0-9]/.test(e.key) && !["Backspace","Tab","ArrowLeft","ArrowRight"].includes(e.key)) {
@@ -616,6 +633,22 @@ function setupPinInputs() {
     });
   });
 }
+
+// Confirmar PIN manualmente pelo botão ✓
+window.confirmarPinManual = async function() {
+  const pin = getPinValue();
+  if (pin.length < 4) {
+    // Shake nos campos vazios
+    [0,1,2,3].forEach(i => {
+      if (!document.getElementById("pin"+i).value) {
+        document.getElementById("pin"+i).classList.add("erro");
+        setTimeout(() => document.getElementById("pin"+i).classList.remove("erro"), 600);
+      }
+    });
+    return;
+  }
+  await autenticarComPin(pin);
+};
 
 // Calcula o timestamp de kickoff de um jogo a partir de data/hora textuais
 function jogoKickoff(jogo) {
@@ -992,22 +1025,38 @@ function iniciar() {
     carregarPalpitesUsuario(nomeSalvo);
   }
 
-  // Listener no campo nome: ao digitar e pausar, verifica se nome tem PIN ou é novo
-  let nomeDebounce;
+  // Listener no campo nome: ao digitar mostra/oculta o botão "Entrar"
   document.getElementById("nome").addEventListener("input", function() {
-    clearTimeout(nomeDebounce);
     const nome = this.value.trim();
-    if (nome.length < 2) { ocultarPinSection(); return; }
-    nomeDebounce = setTimeout(async () => {
-      const pinDoc = await buscarPinDoc(nome);
-      if (pinDoc) {
-        mostrarPinSection("confirmar", nome);
-      } else {
-        mostrarPinSection("novo", nome);
-      }
-      document.getElementById("pin0").focus();
-    }, 300);
+    const btn = document.getElementById("btnConfirmarNome");
+    if (nome.length >= 2) {
+      btn.style.display = "block";
+    } else {
+      btn.style.display = "none";
+      ocultarPinSection();
+    }
   });
+
+  // Enter no campo nome também dispara o confirmar
+  document.getElementById("nome").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      const nome = this.value.trim();
+      if (nome.length >= 2) window.confirmarNome();
+    }
+  });
+
+  // Função confirmarNome: abre a seção de PIN ao clicar no botão
+  window.confirmarNome = async function() {
+    const nome = document.getElementById("nome").value.trim();
+    if (nome.length < 2) return;
+    const pinDoc = await buscarPinDoc(nome);
+    if (pinDoc) {
+      mostrarPinSection("confirmar", nome);
+    } else {
+      mostrarPinSection("novo", nome);
+    }
+    setTimeout(() => document.getElementById("pin0").focus(), 50);
+  };
 
   // Listener em tempo real dos resultados (para o ranking funcionar)
   onSnapshot(collection(db,"resultados"), snap=>{

@@ -19,6 +19,11 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body {
   background: #030a03;
   font-family: 'Barlow', sans-serif;
@@ -27,6 +32,7 @@ body {
   overflow-x: hidden;
   width: 100%;
   max-width: 100vw;
+  position: relative;
 }
 
 /* Estádio SVG como fundo fixo */
@@ -134,7 +140,7 @@ body::after {
   display: block;
 }
 
-.nome-input-wrap { position: relative; }
+.nome-input-wrap { position: relative; display: flex; gap: 8px; align-items: center; }
 
 .nome-input-wrap::before {
   content: '\26BD';
@@ -144,10 +150,33 @@ body::after {
   transform: translateY(-50%);
   font-size: 18px;
   pointer-events: none;
+  z-index: 1;
+}
+
+.btn-confirmar-nome {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 0 18px;
+  height: 50px;
+  border-radius: 8px;
+  border: 1px solid var(--verde);
+  background: rgba(0,166,81,0.15);
+  color: var(--verde);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-confirmar-nome:hover {
+  background: rgba(0,166,81,0.28);
+  box-shadow: 0 0 0 2px rgba(0,166,81,0.2);
 }
 
 #nome {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   padding: 14px 16px 14px 48px;
   background: var(--superficie);
   border: 1px solid var(--borda-brilho);
@@ -757,6 +786,9 @@ body::after {
   /* Nome / login */
   .nome-section { margin-bottom: 20px; padding: 0 16px; }
   .pin-section { padding: 0 16px; }
+  .btn-confirmar-nome { font-size: 12px; padding: 0 12px; letter-spacing: 1px; }
+  .pin-inputs { gap: 7px; }
+  .pin-digito { width: 44px; height: 50px; font-size: 24px; }
 
   /* Tabs */
   .tabs { gap: 5px; padding: 0 10px; margin-bottom: 20px; justify-content: center; }
