@@ -9,7 +9,8 @@
     .fase-nav {
       display: flex;
       gap: 8px;
-      overflow-x: auto;
+      overflow-x: visible;
+      flex-wrap: wrap;
       padding: 0 20px 12px;
       max-width: 860px;
       margin: 0 auto;
@@ -367,16 +368,12 @@ const FASES = [
     prazoFim: new Date("2026-06-24T19:00:00Z"), // 24/06 16h BRT
     visivelDe: new Date("2026-01-01T00:00:00Z"),
   },
-  {
-    id: "mata16", nome: "16avos", tipo: "mata", rodada: 16,
-    prazoFim: null,
-    visivelDe: new Date("2026-06-28T00:00:00Z"),
-  },
-  {
-    id: "oitavas", nome: "Oitavas", tipo: "mata", rodada: 8,
-    prazoFim: null,
-    visivelDe: new Date("2026-07-01T00:00:00Z"),
-  }
+  { id: "mata32",  nome: "32 avos",      tipo: "mata", rodada: 32, prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
+  { id: "oitavas", nome: "Oitavas",      tipo: "mata", rodada: 16, prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
+  { id: "quartas", nome: "Quartas",      tipo: "mata", rodada: 8,  prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
+  { id: "semis",   nome: "Semifinais",   tipo: "mata", rodada: 4,  prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
+  { id: "terceiro",nome: "3º lugar",     tipo: "mata", rodada: 2,  prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
+  { id: "final",   nome: "Final",        tipo: "mata", rodada: 1,  prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") }
 ];
 
 // ─── JOGOS ────────────────────────────────────────────────────────────────
@@ -456,24 +453,114 @@ const jogos = [
   { id:"jogo70", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"20h30",  grupo:"K", timeA:"Congo",            timeB:"Uzbequistao",          local:"Atlanta" },
   { id:"jogo71", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"23h",    grupo:"J", timeA:"Algeria",          timeB:"Austria",              local:"Kansas City" },
   { id:"jogo72", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"23h",    grupo:"J", timeA:"Jordania",         timeB:"Argentina",            local:"Dallas" },
+
+  // 32 AVOS DE FINAL
+  { id:"jogo73", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"2º A", timeB:"2º B", local:"A definir" },
+  { id:"jogo74", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º E", timeB:"3º A/B/C/D/F", local:"A definir" },
+  { id:"jogo75", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º F", timeB:"2º C", local:"A definir" },
+  { id:"jogo76", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º C", timeB:"2º F", local:"A definir" },
+  { id:"jogo77", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º I", timeB:"3º C/D/F/G/H", local:"A definir" },
+  { id:"jogo78", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"2º E", timeB:"2º I", local:"A definir" },
+  { id:"jogo79", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º A", timeB:"3º C/E/F/H/I", local:"A definir" },
+  { id:"jogo80", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º L", timeB:"3º E/H/I/J/K", local:"A definir" },
+  { id:"jogo81", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º D", timeB:"3º B/E/F/I/J", local:"A definir" },
+  { id:"jogo82", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º G", timeB:"3º A/E/H/I/J", local:"A definir" },
+  { id:"jogo83", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"2º K", timeB:"2º L", local:"A definir" },
+  { id:"jogo84", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º H", timeB:"2º J", local:"A definir" },
+  { id:"jogo85", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º B", timeB:"3º E/F/G/I/J", local:"A definir" },
+  { id:"jogo86", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º J", timeB:"2º H", local:"A definir" },
+  { id:"jogo87", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"1º K", timeB:"3º D/E/I/J/L", local:"A definir" },
+  { id:"jogo88", fase:"mata32", rodada:32, data:"A definir", hora:"", grupo:"32 avos", timeA:"2º D", timeB:"2º G", local:"A definir" },
+
+  // OITAVAS
+  { id:"jogo89", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 73", timeB:"vencedor 75", local:"A definir" },
+  { id:"jogo90", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 74", timeB:"vencedor 77", local:"A definir" },
+  { id:"jogo91", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 76", timeB:"vencedor 78", local:"A definir" },
+  { id:"jogo92", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 79", timeB:"vencedor 80", local:"A definir" },
+  { id:"jogo93", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 83", timeB:"vencedor 84", local:"A definir" },
+  { id:"jogo94", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 81", timeB:"vencedor 82", local:"A definir" },
+  { id:"jogo95", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 86", timeB:"vencedor 88", local:"A definir" },
+  { id:"jogo96", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 85", timeB:"vencedor 87", local:"A definir" },
+
+  // QUARTAS
+  { id:"jogo97", fase:"quartas", rodada:8, data:"A definir", hora:"", grupo:"Quartas", timeA:"vencedor 89", timeB:"vencedor 90", local:"A definir" },
+  { id:"jogo98", fase:"quartas", rodada:8, data:"A definir", hora:"", grupo:"Quartas", timeA:"vencedor 93", timeB:"vencedor 94", local:"A definir" },
+  { id:"jogo99", fase:"quartas", rodada:8, data:"A definir", hora:"", grupo:"Quartas", timeA:"vencedor 91", timeB:"vencedor 92", local:"A definir" },
+  { id:"jogo100", fase:"quartas", rodada:8, data:"A definir", hora:"", grupo:"Quartas", timeA:"vencedor 95", timeB:"vencedor 96", local:"A definir" },
+
+  // SEMIFINAIS
+  { id:"jogo101", fase:"semis", rodada:4, data:"A definir", hora:"", grupo:"Semifinais", timeA:"vencedor 97", timeB:"vencedor 98", local:"A definir" },
+  { id:"jogo102", fase:"semis", rodada:4, data:"A definir", hora:"", grupo:"Semifinais", timeA:"vencedor 99", timeB:"vencedor 100", local:"A definir" },
+
+  // 3º LUGAR E FINAL
+  { id:"jogo103", fase:"terceiro", rodada:2, data:"A definir", hora:"", grupo:"3º lugar", timeA:"perdedor 101", timeB:"perdedor 102", local:"A definir" },
+  { id:"jogo104", fase:"final", rodada:1, data:"A definir", hora:"", grupo:"Final", timeA:"vencedor 101", timeB:"vencedor 102", local:"A definir" },
 ];
 
-const dezesseisvos = [
-  {id:"M73",confronto:"2 Grupo A x 2 Grupo B"},{id:"M74",confronto:"1 Grupo E x Melhor 3"},
-  {id:"M75",confronto:"1 Grupo F x 2 Grupo C"},{id:"M76",confronto:"1 Grupo C x 2 Grupo F"},
-  {id:"M77",confronto:"1 Grupo I x Melhor 3"},{id:"M78",confronto:"2 Grupo E x 2 Grupo I"},
-  {id:"M79",confronto:"1 Grupo A x Melhor 3"},{id:"M80",confronto:"1 Grupo L x Melhor 3"},
-  {id:"M81",confronto:"1 Grupo D x Melhor 3"},{id:"M82",confronto:"1 Grupo G x Melhor 3"},
-  {id:"M83",confronto:"2 Grupo K x 2 Grupo L"},{id:"M84",confronto:"1 Grupo H x 2 Grupo J"},
-  {id:"M85",confronto:"1 Grupo B x Melhor 3"},{id:"M86",confronto:"1 Grupo J x 2 Grupo H"},
-  {id:"M87",confronto:"1 Grupo K x Melhor 3"},{id:"M88",confronto:"2 Grupo D x 2 Grupo G"},
-];
-const oitavas = [
-  {id:"M89",confronto:"Vencedor M73 x Vencedor M75"},{id:"M90",confronto:"Vencedor M74 x Vencedor M77"},
-  {id:"M91",confronto:"Vencedor M76 x Vencedor M78"},{id:"M92",confronto:"Vencedor M79 x Vencedor M80"},
-  {id:"M93",confronto:"Vencedor M83 x Vencedor M84"},{id:"M94",confronto:"Vencedor M81 x Vencedor M82"},
-  {id:"M95",confronto:"Vencedor M86 x Vencedor M88"},{id:"M96",confronto:"Vencedor M85 x Vencedor M87"},
-];
+const CHAVEAMENTO_MATA = {
+  mata32: {
+    titulo: "32 AVOS DE FINAL",
+    jogos: [
+      {id:"Jogo 73", confronto:"2º A x 2º B"},
+      {id:"Jogo 74", confronto:"1º E x 3º A/B/C/D/F"},
+      {id:"Jogo 75", confronto:"1º F x 2º C"},
+      {id:"Jogo 76", confronto:"1º C x 2º F"},
+      {id:"Jogo 77", confronto:"1º I x 3º C/D/F/G/H"},
+      {id:"Jogo 78", confronto:"2º E x 2º I"},
+      {id:"Jogo 79", confronto:"1º A x 3º C/E/F/H/I"},
+      {id:"Jogo 80", confronto:"1º L x 3º E/H/I/J/K"},
+      {id:"Jogo 81", confronto:"1º D x 3º B/E/F/I/J"},
+      {id:"Jogo 82", confronto:"1º G x 3º A/E/H/I/J"},
+      {id:"Jogo 83", confronto:"2º K x 2º L"},
+      {id:"Jogo 84", confronto:"1º H x 2º J"},
+      {id:"Jogo 85", confronto:"1º B x 3º E/F/G/I/J"},
+      {id:"Jogo 86", confronto:"1º J x 2º H"},
+      {id:"Jogo 87", confronto:"1º K x 3º D/E/I/J/L"},
+      {id:"Jogo 88", confronto:"2º D x 2º G"}
+    ]
+  },
+  oitavas: {
+    titulo: "OITAVAS DE FINAL",
+    jogos: [
+      {id:"Jogo 89", confronto:"vencedor 73 x vencedor 75"},
+      {id:"Jogo 90", confronto:"vencedor 74 x vencedor 77"},
+      {id:"Jogo 91", confronto:"vencedor 76 x vencedor 78"},
+      {id:"Jogo 92", confronto:"vencedor 79 x vencedor 80"},
+      {id:"Jogo 93", confronto:"vencedor 83 x vencedor 84"},
+      {id:"Jogo 94", confronto:"vencedor 81 x vencedor 82"},
+      {id:"Jogo 95", confronto:"vencedor 86 x vencedor 88"},
+      {id:"Jogo 96", confronto:"vencedor 85 x vencedor 87"}
+    ]
+  },
+  quartas: {
+    titulo: "QUARTAS DE FINAL",
+    jogos: [
+      {id:"Jogo 97", confronto:"vencedor 89 x vencedor 90"},
+      {id:"Jogo 98", confronto:"vencedor 93 x vencedor 94"},
+      {id:"Jogo 99", confronto:"vencedor 91 x vencedor 92"},
+      {id:"Jogo 100", confronto:"vencedor 95 x vencedor 96"}
+    ]
+  },
+  semis: {
+    titulo: "SEMIFINAIS",
+    jogos: [
+      {id:"Jogo 101", confronto:"vencedor 97 x vencedor 98"},
+      {id:"Jogo 102", confronto:"vencedor 99 x vencedor 100"}
+    ]
+  },
+  terceiro: {
+    titulo: "3º LUGAR",
+    jogos: [
+      {id:"Jogo 103", confronto:"perdedor 101 x perdedor 102"}
+    ]
+  },
+  final: {
+    titulo: "FINAL",
+    jogos: [
+      {id:"Jogo 104", confronto:"vencedor 101 x vencedor 102"}
+    ]
+  }
+};
 
 const resultados = {}; // preenchido via onSnapshot da coleção "resultados" no Firestore
 let faseAtual = "grupos_r1";
@@ -722,7 +809,7 @@ function renderizarFaseNav() {
         ? '<span class="aba-badge aberto">ABERTO</span>'
         : '<span class="aba-badge fechado">ENCERRADO</span>';
     } else if (fase.tipo==="mata" && visivel) {
-      badgeHtml = '<span class="aba-badge aguarda">EM BREVE</span>';
+      badgeHtml = '<span class="aba-badge aberto">CHAVE</span>';
     } else if (!visivel) {
       badgeHtml = '<span class="aba-badge aguarda">BLOQUEADO</span>';
     }
@@ -746,8 +833,8 @@ function atualizarBannerPrazo() {
   if (!fase) return;
   if (fase.tipo==="mata") {
     banner.className="prazo-card aguardando";
-    titulo.textContent="Aguardando definicao do chaveamento";
-    detalhe.textContent="As datas desta fase serao anunciadas em breve.";
+    titulo.textContent="Chaveamento definido";
+    detalhe.textContent="Formato 2026: passam 1º e 2º de cada grupo + 8 melhores terceiros. Mata-mata começa nos 32 avos.";
     countdown.textContent=""; return;
   }
   const aberto=faseEstaAberta(fase);
@@ -763,6 +850,131 @@ function atualizarBannerPrazo() {
     detalhe.textContent="Palpites encerrados em: "+fase.prazoFim.toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'});
     countdown.textContent="";
   }
+}
+
+
+// ─── Classificação automática e mata-mata ─────────────────────────────────
+function resultadoDoJogo(jogoId) {
+  return resultados[jogoId] || null;
+}
+
+function estatisticasVazias(grupo, nome) {
+  return { grupo, nome, pts:0, j:0, v:0, e:0, d:0, gp:0, gc:0, sg:0 };
+}
+
+function calcularClassificacaoGrupos() {
+  const tabela = {};
+  jogos.filter(j => j.tipo !== "mata" && j.fase && j.fase.startsWith("grupos_")).forEach(jogo => {
+    if (!tabela[jogo.grupo]) tabela[jogo.grupo] = {};
+    if (!tabela[jogo.grupo][jogo.timeA]) tabela[jogo.grupo][jogo.timeA] = estatisticasVazias(jogo.grupo, jogo.timeA);
+    if (!tabela[jogo.grupo][jogo.timeB]) tabela[jogo.grupo][jogo.timeB] = estatisticasVazias(jogo.grupo, jogo.timeB);
+
+    const r = resultadoDoJogo(jogo.id);
+    if (!r) return;
+
+    const a = tabela[jogo.grupo][jogo.timeA];
+    const b = tabela[jogo.grupo][jogo.timeB];
+    a.j++; b.j++;
+    a.gp += r.placarA; a.gc += r.placarB;
+    b.gp += r.placarB; b.gc += r.placarA;
+    a.sg = a.gp - a.gc;
+    b.sg = b.gp - b.gc;
+
+    if (r.placarA > r.placarB) { a.v++; b.d++; a.pts += 3; }
+    else if (r.placarA < r.placarB) { b.v++; a.d++; b.pts += 3; }
+    else { a.e++; b.e++; a.pts++; b.pts++; }
+  });
+
+  const ordenada = {};
+  Object.keys(tabela).forEach(g => {
+    ordenada[g] = Object.values(tabela[g]).sort((a,b) =>
+      b.pts - a.pts || b.sg - a.sg || b.gp - a.gp || a.nome.localeCompare(b.nome)
+    );
+  });
+  return ordenada;
+}
+
+function todosResultadosGruposInseridos() {
+  return jogos.filter(j => j.fase && j.fase.startsWith("grupos_")).every(j => !!resultadoDoJogo(j.id));
+}
+
+function escolherTerceiro(classificacao, gruposPermitidos, usados) {
+  const candidatos = gruposPermitidos
+    .map(g => classificacao[g]?.[2])
+    .filter(t => t && !usados.has(t.grupo));
+  candidatos.sort((a,b) => b.pts - a.pts || b.sg - a.sg || b.gp - a.gp || a.nome.localeCompare(b.nome));
+  const escolhido = candidatos[0];
+  if (escolhido) usados.add(escolhido.grupo);
+  return escolhido ? escolhido.nome : "3º " + gruposPermitidos.join("/");
+}
+
+function resolverSlotGrupo(slot, classificacao, usadosTerceiros) {
+  const m = slot.match(/^(1º|2º|3º)\s+([A-L](?:\/[A-L])*)$/);
+  if (!m) return slot;
+  const pos = m[1], grupos = m[2].split('/');
+  if (pos === "1º") return classificacao[grupos[0]]?.[0]?.nome || slot;
+  if (pos === "2º") return classificacao[grupos[0]]?.[1]?.nome || slot;
+  return escolherTerceiro(classificacao, grupos, usadosTerceiros);
+}
+
+const DEFINICAO_MATA = {
+  jogo73:["2º A","2º B"], jogo74:["1º E","3º A/B/C/D/F"], jogo75:["1º F","2º C"], jogo76:["1º C","2º F"],
+  jogo77:["1º I","3º C/D/F/G/H"], jogo78:["2º E","2º I"], jogo79:["1º A","3º C/E/F/H/I"], jogo80:["1º L","3º E/H/I/J/K"],
+  jogo81:["1º D","3º B/E/F/I/J"], jogo82:["1º G","3º A/E/H/I/J"], jogo83:["2º K","2º L"], jogo84:["1º H","2º J"],
+  jogo85:["1º B","3º E/F/G/I/J"], jogo86:["1º J","2º H"], jogo87:["1º K","3º D/E/I/J/L"], jogo88:["2º D","2º G"],
+  jogo89:["vencedor 73","vencedor 75"], jogo90:["vencedor 74","vencedor 77"], jogo91:["vencedor 76","vencedor 78"], jogo92:["vencedor 79","vencedor 80"],
+  jogo93:["vencedor 83","vencedor 84"], jogo94:["vencedor 81","vencedor 82"], jogo95:["vencedor 86","vencedor 88"], jogo96:["vencedor 85","vencedor 87"],
+  jogo97:["vencedor 89","vencedor 90"], jogo98:["vencedor 93","vencedor 94"], jogo99:["vencedor 91","vencedor 92"], jogo100:["vencedor 95","vencedor 96"],
+  jogo101:["vencedor 97","vencedor 98"], jogo102:["vencedor 99","vencedor 100"],
+  jogo103:["perdedor 101","perdedor 102"], jogo104:["vencedor 101","vencedor 102"]
+};
+
+function vencedorOuPerdedor(jogoNum, tipo, cache) {
+  const id = "jogo" + jogoNum;
+  const jogoResolvido = resolverJogoMata(id, cache);
+  const r = resultadoDoJogo(id);
+  if (!r) return tipo + " " + jogoNum;
+  if (r.placarA === r.placarB) return "Definir nos pênaltis (jogo " + jogoNum + ")";
+  const vencedor = r.placarA > r.placarB ? jogoResolvido.timeA : jogoResolvido.timeB;
+  const perdedor = r.placarA > r.placarB ? jogoResolvido.timeB : jogoResolvido.timeA;
+  return tipo === "vencedor" ? vencedor : perdedor;
+}
+
+function resolverSlotMata(slot, classificacao, usadosTerceiros, cache) {
+  const dep = slot.match(/^(vencedor|perdedor)\s+(\d+)$/);
+  if (dep) return vencedorOuPerdedor(dep[2], dep[1], cache);
+  return resolverSlotGrupo(slot, classificacao, usadosTerceiros);
+}
+
+function resolverJogoMata(jogoId, cache={}) {
+  if (cache[jogoId]) return cache[jogoId];
+  const jogo = jogos.find(j => j.id === jogoId);
+  const def = DEFINICAO_MATA[jogoId];
+  if (!jogo || !def) return jogo;
+  const classificacao = calcularClassificacaoGrupos();
+  const usadosTerceiros = new Set();
+  // Resolve os 32 avos em ordem para não repetir o mesmo terceiro dentro dos slots permitidos.
+  Object.keys(DEFINICAO_MATA).filter(id => Number(id.replace('jogo','')) >= 73 && Number(id.replace('jogo','')) <= 88).forEach(id => {
+    if (Number(id.replace('jogo','')) < Number(jogoId.replace('jogo',''))) {
+      const d = DEFINICAO_MATA[id];
+      d.forEach(slot => { if (slot.startsWith('3º')) resolverSlotGrupo(slot, classificacao, usadosTerceiros); });
+    }
+  });
+  const timeA = resolverSlotMata(def[0], classificacao, usadosTerceiros, cache);
+  const timeB = resolverSlotMata(def[1], classificacao, usadosTerceiros, cache);
+  cache[jogoId] = { ...jogo, timeA, timeB };
+  return cache[jogoId];
+}
+
+function obterJogoExibicao(jogo) {
+  return jogo.fase && ["mata32","oitavas","quartas","semis","terceiro","final"].includes(jogo.fase)
+    ? resolverJogoMata(jogo.id)
+    : jogo;
+}
+
+function resultadoTexto(jogoId) {
+  const r = resultadoDoJogo(jogoId);
+  return r ? `<div style="margin-top:10px;font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--ouro);">${r.placarA} x ${r.placarB}</div>` : '';
 }
 
 // ─── Mostrar jogos ────────────────────────────────────────────────────────
@@ -785,32 +997,27 @@ function mostrarJogos() {
   }
 
   if (fase && fase.tipo==="mata") {
+    const jogosFase = jogos.filter(j=>j.fase===faseAtual).map(j=>obterJogoExibicao(j));
     const wrap=document.createElement('div');
     wrap.className="chaveamento";
-    wrap.innerHTML='<div class="mata-mata-aviso"><h3>Em Preparacao</h3><p>O chaveamento sera definido apos a fase de grupos. As datas serao anunciadas em breve!</p></div>';
+    const tituloFase = (CHAVEAMENTO_MATA[faseAtual]?.titulo || fase.nome).toUpperCase();
+    const aviso=document.createElement('div');
+    aviso.className="mata-mata-aviso";
+    aviso.innerHTML='<h3>'+tituloFase+'</h3><p>As seleções são preenchidas automaticamente pelos resultados salvos no painel Admin. Se algum confronto ainda aparecer genérico, falta inserir resultado de jogos anteriores.</p>';
+    wrap.appendChild(aviso);
 
-    const t16=document.createElement('div'); t16.className="chave-titulo"; t16.textContent="16AVOS DE FINAL";
-    wrap.appendChild(t16);
-    const g16=document.createElement('div'); g16.className="chave-grid";
-    dezesseisvos.forEach(j=>{
-      const el=document.createElement('div'); el.className="chave-jogo";
-      el.innerHTML='<div class="chave-jogo-id">'+j.id+'</div><div class="chave-confronto">'+j.confronto+'</div>';
-      g16.appendChild(el);
+    const grid=document.createElement('div');
+    grid.className="chave-grid";
+    jogosFase.forEach(j=>{
+      const num = j.id.replace('jogo','');
+      const el=document.createElement('div');
+      el.className="chave-jogo";
+      el.innerHTML='<div class="chave-jogo-id">Jogo '+num+'</div><div class="chave-confronto"><strong>'+j.timeA+'</strong><br>x<br><strong>'+j.timeB+'</strong></div>'+resultadoTexto(j.id);
+      grid.appendChild(el);
     });
-    wrap.appendChild(g16);
-
-    if (faseAtual==="oitavas") {
-      const t8=document.createElement('div'); t8.className="chave-titulo"; t8.textContent="OITAVAS DE FINAL";
-      wrap.appendChild(t8);
-      const g8=document.createElement('div'); g8.className="chave-grid";
-      oitavas.forEach(j=>{
-        const el=document.createElement('div'); el.className="chave-jogo";
-        el.innerHTML='<div class="chave-jogo-id">'+j.id+'</div><div class="chave-confronto">'+j.confronto+'</div>';
-        g8.appendChild(el);
-      });
-      wrap.appendChild(g8);
-    }
-    lista.appendChild(wrap); return;
+    wrap.appendChild(grid);
+    lista.appendChild(wrap);
+    return;
   }
 
   const jogosFase=jogos.filter(j=>j.fase===faseAtual);
@@ -870,7 +1077,7 @@ async function salvarPalpite(idJogo) {
   const nome = usuarioAutenticado;
   const fase=FASES.find(f=>f.id===faseAtual);
   if (!fase||!faseEstaAberta(fase)) { mostrarToast("Prazo encerrado!", true); return; }
-  const jogo=jogos.find(j=>j.id===idJogo);
+  const jogo=obterJogoExibicao(jogos.find(j=>j.id===idJogo));
   if (!jogoEstaAberto(jogo)) { mostrarToast("Este jogo ja comecou!", true); return; }
   const pA=document.getElementById(idJogo+"-A").value;
   const pB=document.getElementById(idJogo+"-B").value;
@@ -1066,6 +1273,8 @@ function iniciar() {
     getDocs(qp).then(s=>{
       const todos = s.docs.map(d=>d.data());
       renderizarRanking(calcularRanking(todos));
+      mostrarJogos();
+      if (adminAutenticado) preencherSelectJogos();
     });
   });
 
@@ -1110,14 +1319,15 @@ document.getElementById("adminSenha").addEventListener("keydown", e => {
 function preencherSelectJogos() {
   const sel = document.getElementById("adminJogoSelect");
   sel.innerHTML = '<option value="">— escolha um jogo —</option>';
-  jogos.forEach(j => {
+  jogos.forEach(jOriginal => {
+    const j = obterJogoExibicao(jOriginal);
     const opt = document.createElement("option");
     opt.value = j.id;
     opt.textContent = j.data + " | " + j.grupo + " | " + j.timeA + " x " + j.timeB;
     sel.appendChild(opt);
   });
   sel.addEventListener("change", function() {
-    const jogo = jogos.find(j => j.id === this.value);
+    const jogo = obterJogoExibicao(jogos.find(j => j.id === this.value));
     const info = document.getElementById("adminJogoInfo");
     if (!jogo) { info.style.display = "none"; return; }
     info.style.display = "block";
@@ -1165,7 +1375,7 @@ function carregarResultadosAdmin() {
     if (snap.empty) { lista.innerHTML = '<div class="vazio">Nenhum resultado inserido ainda.</div>'; return; }
     const items = snap.docs.map(d => {
       const r = d.data();
-      const jogo = jogos.find(j => j.id === r.jogoId);
+      const jogo = obterJogoExibicao(jogos.find(j => j.id === r.jogoId));
       const label = jogo ? (jogo.timeA + " x " + jogo.timeB) : r.jogoId;
       return `<div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--superficie);border:1px solid var(--borda);border-radius:8px;">
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--texto);flex:1;letter-spacing:0.5px;">${label}</div>
