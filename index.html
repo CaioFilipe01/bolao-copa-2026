@@ -355,17 +355,17 @@ const db = getFirestore(app);
 const FASES = [
   {
     id: "grupos_r1", nome: "1 Rodada", tipo: "grupos", rodada: 1,
-    prazoFim: null, // cada jogo bloqueia individualmente no seu kickoff
+    prazoFim: new Date("2026-06-11T19:00:00Z"), // 11/06 16h BRT
     visivelDe: new Date("2026-01-01T00:00:00Z"),
   },
   {
     id: "grupos_r2", nome: "2 Rodada", tipo: "grupos", rodada: 2,
-    prazoFim: null, // cada jogo bloqueia individualmente no seu kickoff
+    prazoFim: new Date("2026-06-18T16:00:00Z"), // 18/06 13h BRT
     visivelDe: new Date("2026-01-01T00:00:00Z"),
   },
   {
     id: "grupos_r3", nome: "3 Rodada", tipo: "grupos", rodada: 3,
-    prazoFim: null, // cada jogo bloqueia individualmente no seu kickoff
+    prazoFim: new Date("2026-06-24T19:00:00Z"), // 24/06 16h BRT
     visivelDe: new Date("2026-01-01T00:00:00Z"),
   },
   { id: "mata32",  nome: "32 avos",      tipo: "mata", rodada: 32, prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
@@ -755,6 +755,13 @@ function jogoEstaAberto(jogo) {
   return new Date() < jogoKickoff(jogo);
 }
 
+// Palpite só fica visível para outros após o kickoff do jogo
+function palpiteEstaVisivel(jogoId) {
+  const jogo = jogos.find(j => j.id === jogoId);
+  if (!jogo || !jogo.hora) return true; // mata-mata sem hora: sempre visível
+  return new Date() >= jogoKickoff(jogo);
+}
+
 // Carrega palpites do usuário atual do Firebase
 async function carregarPalpitesUsuario(nome) {
   palpitesDoUsuario = {};
@@ -782,15 +789,7 @@ function calcularPontos(p, r) {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────
-// prazoFim: null = sem prazo global (cada jogo controla pelo kickoff)
-function faseEstaAberta(f) { return f.prazoFim ? new Date() < f.prazoFim : true; }
-
-// Palpite só fica visível para outros após o kickoff do jogo
-function palpiteEstaVisivel(jogoId) {
-  const jogo = jogos.find(j => j.id === jogoId);
-  if (!jogo || !jogo.hora) return true;
-  return new Date() >= jogoKickoff(jogo);
-}
+function faseEstaAberta(f) { return f.prazoFim ? new Date() < f.prazoFim : false; }
 function faseEstaVisivel(f) { return new Date() >= f.visivelDe; }
 
 function formatarCountdown(ms) {
@@ -1029,7 +1028,6 @@ function mostrarJogos() {
   }
 
   const jogosFase=jogos.filter(j=>j.fase===faseAtual);
-  const aberto=fase?faseEstaAberta(fase):false;
   const porData={};
   jogosFase.forEach(j=>{ if(!porData[j.data]) porData[j.data]=[]; porData[j.data].push(j); });
 
@@ -1041,19 +1039,20 @@ function mostrarJogos() {
     const grid=document.getElementById(safeId);
     porData[data].forEach(jogo=>{
       const card=document.createElement('div');
-      card.className="jogo-card"+(aberto?"":" bloqueado");
+      const jogoAberto = jogoEstaAberto(jogo);
+      card.className="jogo-card"+(jogoAberto?"":" bloqueado");
       card.id="card-"+jogo.id;
 
       const palpiteExist = palpitesDoUsuario[jogo.id];
-      const jogoAberto = jogoEstaAberto(jogo);
       const jogoVisivel = palpiteEstaVisivel(jogo.id);
       const pA_val = palpiteExist ? palpiteExist.placarA : '';
       const pB_val = palpiteExist ? palpiteExist.placarB : '';
-      const inputDisabled = (!aberto || !jogoAberto) ? ' disabled' : '';
+      const inputDisabled = !jogoAberto ? ' disabled' : '';
 
       let btnHtml;
-      if (!aberto || !jogoAberto) {
+      if (!jogoAberto) {
         if (palpiteExist) {
+          // Se o jogo ainda não começou, oculta o placar salvo
           const labelBtn = jogoVisivel
             ? '&#10003; '+palpiteExist.placarA+'x'+palpiteExist.placarB+' — Encerrado'
             : '&#128274; Palpite registrado — visível após o início';
@@ -1087,10 +1086,8 @@ function mostrarJogos() {
 async function salvarPalpite(idJogo) {
   if (!usuarioAutenticado) { mostrarToast("Faça login com seu nome e PIN primeiro!", true); return; }
   const nome = usuarioAutenticado;
-  const fase=FASES.find(f=>f.id===faseAtual);
-  if (!fase||!faseEstaAberta(fase)) { mostrarToast("Prazo encerrado!", true); return; }
   const jogo=obterJogoExibicao(jogos.find(j=>j.id===idJogo));
-  if (!jogoEstaAberto(jogo)) { mostrarToast("Este jogo ja comecou!", true); return; }
+  if (!jogoEstaAberto(jogo)) { mostrarToast("Este jogo já começou!", true); return; }
   const pA=document.getElementById(idJogo+"-A").value;
   const pB=document.getElementById(idJogo+"-B").value;
   if (pA===""||pB==="") { mostrarToast("Preencha o placar!", true); return; }
@@ -1193,7 +1190,7 @@ function renderizarFeedLista(palpites) {
     const visivel = palpiteEstaVisivel(p.jogoId);
     const placarHtml = (visivel || ehProprioUsuario)
       ? `<div class="feed-placar">${p.placarA} × ${p.placarB}</div>`
-      : `<div class="feed-placar" style="font-size:13px;letter-spacing:1px;color:var(--texto-muted);">&#128274; oculto</div>`;
+      : `<div class="feed-placar" style="font-size:13px;letter-spacing:1px;color:var(--texto-muted);font-family:'Barlow Condensed',sans-serif;">&#128274; oculto</div>`;
     return `<div class="feed-item" style="animation-delay:${i*0.04}s">
       <div class="feed-avatar">${ini}</div>
       <div class="feed-info">
