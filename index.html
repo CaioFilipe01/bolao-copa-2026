@@ -755,6 +755,13 @@ function jogoEstaAberto(jogo) {
   return new Date() < jogoKickoff(jogo);
 }
 
+// Palpite só fica visível para outros após o kickoff do jogo
+function palpiteEstaVisivel(jogoId) {
+  const jogo = jogos.find(j => j.id === jogoId);
+  if (!jogo || !jogo.hora) return true; // mata-mata sem hora: sempre visível
+  return new Date() >= jogoKickoff(jogo);
+}
+
 // Carrega palpites do usuário atual do Firebase
 async function carregarPalpitesUsuario(nome) {
   palpitesDoUsuario = {};
@@ -1038,6 +1045,7 @@ function mostrarJogos() {
 
       const palpiteExist = palpitesDoUsuario[jogo.id];
       const jogoAberto = jogoEstaAberto(jogo);
+      const jogoVisivel = palpiteEstaVisivel(jogo.id);
       const pA_val = palpiteExist ? palpiteExist.placarA : '';
       const pB_val = palpiteExist ? palpiteExist.placarB : '';
       const inputDisabled = (!aberto || !jogoAberto) ? ' disabled' : '';
@@ -1045,7 +1053,11 @@ function mostrarJogos() {
       let btnHtml;
       if (!aberto || !jogoAberto) {
         if (palpiteExist) {
-          btnHtml = '<button class="btn-salvar btn-salvo" disabled style="opacity:0.7;cursor:not-allowed;">&#10003; '+palpiteExist.placarA+'x'+palpiteExist.placarB+' — Encerrado</button>';
+          // Se o jogo ainda não começou, oculta o placar salvo
+          const labelBtn = jogoVisivel
+            ? '&#10003; '+palpiteExist.placarA+'x'+palpiteExist.placarB+' — Encerrado'
+            : '&#128274; Palpite registrado — visível após o início';
+          btnHtml = '<button class="btn-salvar btn-salvo" disabled style="opacity:0.7;cursor:not-allowed;">'+labelBtn+'</button>';
         } else {
           btnHtml = '<button class="btn-salvar" disabled style="opacity:0.4;cursor:not-allowed;">Prazo Encerrado</button>';
         }
@@ -1177,13 +1189,18 @@ function renderizarFeedLista(palpites) {
   lista.innerHTML = palpites.map((p, i) => {
     const ini = p.nome.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
     const t = formatarTempo(p.criadoEm?.toDate ? p.criadoEm.toDate() : new Date(p.criadoEm));
+    const ehProprioUsuario = usuarioAutenticado && p.nome === usuarioAutenticado;
+    const visivel = palpiteEstaVisivel(p.jogoId);
+    const placarHtml = (visivel || ehProprioUsuario)
+      ? `<div class="feed-placar">${p.placarA} × ${p.placarB}</div>`
+      : `<div class="feed-placar" style="font-size:13px;letter-spacing:1px;color:var(--texto-muted);font-family:'Barlow Condensed',sans-serif;">&#128274; oculto</div>`;
     return `<div class="feed-item" style="animation-delay:${i*0.04}s">
       <div class="feed-avatar">${ini}</div>
       <div class="feed-info">
         <div class="feed-nome">${p.nome}</div>
         <div class="feed-jogo-mobile">${p.timeA} × ${p.timeB}</div>
       </div>
-      <div class="feed-placar">${p.placarA} × ${p.placarB}</div>
+      ${placarHtml}
       <div class="feed-hora">${t}</div>
     </div>`;
   }).join('');
