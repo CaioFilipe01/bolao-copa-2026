@@ -750,8 +750,7 @@ function jogoKickoff(jogo) {
 }
 
 function jogoEstaAberto(jogo) {
-  const fase = FASES.find(f => f.id === jogo.fase);
-  if (!fase || !faseEstaAberta(fase)) return false;
+  if (!jogo.hora) return false; // mata-mata sem hora: fechado
   return new Date() < jogoKickoff(jogo);
 }
 
