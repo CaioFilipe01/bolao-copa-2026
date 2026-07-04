@@ -318,6 +318,11 @@
             <input type="number" id="adminPlacarB" min="0" max="30" placeholder="0" style="width:70px;height:70px;text-align:center;font-family:'Bebas Neue',sans-serif;font-size:32px;background:var(--fundo2);border:2px solid var(--borda-brilho);border-radius:8px;color:var(--texto);outline:none;">
           </div>
           <div id="adminResultadoAtual" style="text-align:center;font-size:13px;color:var(--ouro);margin-bottom:14px;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;"></div>
+          <!-- Campo pênaltis: só aparece quando empate -->
+          <div id="adminPenaltiWrap" style="display:none;background:rgba(245,197,24,0.08);border:1px solid var(--ouro);border-radius:10px;padding:16px;margin-bottom:16px;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--ouro);margin-bottom:12px;text-align:center;">⚽ Empate! Quem passou nos pênaltis?</div>
+            <div style="display:flex;gap:10px;" id="adminPenaltiBtns"></div>
+          </div>
           <button onclick="window.salvarResultado()" style="width:100%;padding:13px;background:linear-gradient(135deg,var(--verde-escuro),var(--verde));border:none;border-radius:8px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;">&#128190; Salvar Resultado</button>
         </div>
 
@@ -368,7 +373,7 @@ const FASES = [
     prazoFim: new Date("2026-06-24T19:00:00Z"), // 24/06 16h BRT
     visivelDe: new Date("2026-01-01T00:00:00Z"),
   },
-  { id: "mata32",  nome: "16 AVOS",      tipo: "mata", rodada: 32, prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
+  { id: "mata32",  nome: "32 avos",      tipo: "mata", rodada: 32, prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
   { id: "oitavas", nome: "Oitavas",      tipo: "mata", rodada: 16, prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
   { id: "quartas", nome: "Quartas",      tipo: "mata", rodada: 8,  prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
   { id: "semis",   nome: "Semifinais",   tipo: "mata", rodada: 4,  prazoFim: null, visivelDe: new Date("2026-01-01T00:00:00Z") },
@@ -454,33 +459,33 @@ const jogos = [
   { id:"jogo71", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"23h",    grupo:"J", timeA:"Algeria",          timeB:"Austria",              local:"Kansas City" },
   { id:"jogo72", fase:"grupos_r3", rodada:3, data:"27/06 Sab", hora:"23h",    grupo:"J", timeA:"Jordania",         timeB:"Argentina",            local:"Dallas" },
 
-  // 16 AVOS DE FINAL
-  { id:"jogo73", fase:"mata32", rodada:32, data:"28/06 Dom", hora:"16h",    grupo:"16 AVOS", timeA:"🇿🇦 África do Sul", timeB:"🇨🇦 Canadá", local:"A definir" },
-  { id:"jogo74", fase:"mata32", rodada:32, data:"29/06 Seg", hora:"14h",    grupo:"16 AVOS", timeA:"🇧🇷 Brasil", timeB:"🇯🇵 Japão", local:"A definir" },
-  { id:"jogo75", fase:"mata32", rodada:32, data:"29/06 Seg", hora:"17h30",  grupo:"16 AVOS", timeA:"🇩🇪 Alemanha", timeB:"🇵🇾 Paraguai", local:"A definir" },
-  { id:"jogo76", fase:"mata32", rodada:32, data:"29/06 Seg", hora:"22h",    grupo:"16 AVOS", timeA:"🇳🇱 Países Baixos", timeB:"🇲🇦 Marrocos", local:"A definir" },
-  { id:"jogo77", fase:"mata32", rodada:32, data:"30/06 Ter", hora:"14h",    grupo:"16 AVOS", timeA:"🇨🇮 Costa do Marfim", timeB:"🇳🇴 Noruega", local:"A definir" },
-  { id:"jogo78", fase:"mata32", rodada:32, data:"30/06 Ter", hora:"18h",    grupo:"16 AVOS", timeA:"🇫🇷 França", timeB:"🇸🇪 Suécia", local:"A definir" },
-  { id:"jogo79", fase:"mata32", rodada:32, data:"30/06 Ter", hora:"22h",    grupo:"16 AVOS", timeA:"🇲🇽 México", timeB:"🇪🇨 Equador", local:"A definir" },
-  { id:"jogo80", fase:"mata32", rodada:32, data:"01/07 Qua", hora:"13h",    grupo:"16 AVOS", timeA:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra", timeB:"🇨🇩 Congo DR", local:"A definir" },
-  { id:"jogo81", fase:"mata32", rodada:32, data:"01/07 Qua", hora:"17h",    grupo:"16 AVOS", timeA:"🇧🇪 Bélgica", timeB:"🇸🇳 Senegal", local:"A definir" },
-  { id:"jogo82", fase:"mata32", rodada:32, data:"01/07 Qua", hora:"21h",    grupo:"16 AVOS", timeA:"🇺🇸 Estados Unidos", timeB:"🇧🇦 Bósnia e Herzegovina", local:"A definir" },
-  { id:"jogo83", fase:"mata32", rodada:32, data:"02/07 Qui", hora:"16h",    grupo:"16 AVOS", timeA:"🇪🇸 Espanha", timeB:"🇦🇹 Áustria", local:"A definir" },
-  { id:"jogo84", fase:"mata32", rodada:32, data:"02/07 Qui", hora:"20h",    grupo:"16 AVOS", timeA:"🇵🇹 Portugal", timeB:"🇭🇷 Croácia", local:"A definir" },
-  { id:"jogo85", fase:"mata32", rodada:32, data:"03/07 Sex", hora:"00h",    grupo:"16 AVOS", timeA:"🇨🇭 Suíça", timeB:"🇩🇿 Argélia", local:"A definir" },
-  { id:"jogo86", fase:"mata32", rodada:32, data:"03/07 Sex", hora:"19h",    grupo:"16 AVOS", timeA:"🇦🇷 Argentina", timeB:"🇨🇻 Cabo Verde", local:"A definir" },
-  { id:"jogo87", fase:"mata32", rodada:32, data:"03/07 Sex", hora:"22h30",    grupo:"16 AVOS", timeA:"🇨🇴 Colômbia", timeB:"🇬🇭 Gana", local:"A definir" },
-  { id:"jogo88", fase:"mata32", rodada:32, data:"03/07 Sex", hora:"15h",  grupo:"16 AVOS", timeA:"🇦🇺 Austrália", timeB:"🇪🇬 Egito", local:"A definir" },
+  // 32 AVOS DE FINAL
+  { id:"jogo73", fase:"mata32", rodada:32, data:"28/06 Dom", hora:"16h",    grupo:"32 avos", timeA:"🇿🇦 África do Sul", timeB:"🇨🇦 Canadá", local:"A definir" },
+  { id:"jogo74", fase:"mata32", rodada:32, data:"29/06 Seg", hora:"14h",    grupo:"32 avos", timeA:"🇧🇷 Brasil", timeB:"🇯🇵 Japão", local:"A definir" },
+  { id:"jogo75", fase:"mata32", rodada:32, data:"29/06 Seg", hora:"17h30",  grupo:"32 avos", timeA:"🇩🇪 Alemanha", timeB:"🇵🇾 Paraguai", local:"A definir" },
+  { id:"jogo76", fase:"mata32", rodada:32, data:"29/06 Seg", hora:"22h",    grupo:"32 avos", timeA:"🇳🇱 Países Baixos", timeB:"🇲🇦 Marrocos", local:"A definir" },
+  { id:"jogo77", fase:"mata32", rodada:32, data:"30/06 Ter", hora:"14h",    grupo:"32 avos", timeA:"🇨🇮 Costa do Marfim", timeB:"🇳🇴 Noruega", local:"A definir" },
+  { id:"jogo78", fase:"mata32", rodada:32, data:"30/06 Ter", hora:"18h",    grupo:"32 avos", timeA:"🇫🇷 França", timeB:"🇸🇪 Suécia", local:"A definir" },
+  { id:"jogo79", fase:"mata32", rodada:32, data:"30/06 Ter", hora:"22h",    grupo:"32 avos", timeA:"🇲🇽 México", timeB:"🇪🇨 Equador", local:"A definir" },
+  { id:"jogo80", fase:"mata32", rodada:32, data:"01/07 Qua", hora:"13h",    grupo:"32 avos", timeA:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra", timeB:"🇨🇩 Congo DR", local:"A definir" },
+  { id:"jogo81", fase:"mata32", rodada:32, data:"01/07 Qua", hora:"17h",    grupo:"32 avos", timeA:"🇧🇪 Bélgica", timeB:"🇸🇳 Senegal", local:"A definir" },
+  { id:"jogo82", fase:"mata32", rodada:32, data:"01/07 Qua", hora:"21h",    grupo:"32 avos", timeA:"🇺🇸 Estados Unidos", timeB:"🇧🇦 Bósnia e Herzegovina", local:"A definir" },
+  { id:"jogo83", fase:"mata32", rodada:32, data:"02/07 Qui", hora:"16h",    grupo:"32 avos", timeA:"🇪🇸 Espanha", timeB:"🇦🇹 Áustria", local:"A definir" },
+  { id:"jogo84", fase:"mata32", rodada:32, data:"02/07 Qui", hora:"20h",    grupo:"32 avos", timeA:"🇵🇹 Portugal", timeB:"🇭🇷 Croácia", local:"A definir" },
+  { id:"jogo85", fase:"mata32", rodada:32, data:"03/07 Sex", hora:"00h",    grupo:"32 avos", timeA:"🇨🇭 Suíça", timeB:"🇩🇿 Argélia", local:"A definir" },
+  { id:"jogo86", fase:"mata32", rodada:32, data:"03/07 Sex", hora:"15h",    grupo:"32 avos", timeA:"🇦🇷 Argentina", timeB:"🇨🇻 Cabo Verde", local:"A definir" },
+  { id:"jogo87", fase:"mata32", rodada:32, data:"03/07 Sex", hora:"19h",    grupo:"32 avos", timeA:"🇨🇴 Colômbia", timeB:"🇬🇭 Gana", local:"A definir" },
+  { id:"jogo88", fase:"mata32", rodada:32, data:"03/07 Sex", hora:"22h30",  grupo:"32 avos", timeA:"🇦🇺 Austrália", timeB:"🇪🇬 Egito", local:"A definir" },
 
   // OITAVAS
-  { id:"jogo89", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 73", timeB:"vencedor 75", local:"A definir" },
-  { id:"jogo90", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 74", timeB:"vencedor 77", local:"A definir" },
-  { id:"jogo91", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 76", timeB:"vencedor 78", local:"A definir" },
-  { id:"jogo92", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 79", timeB:"vencedor 80", local:"A definir" },
-  { id:"jogo93", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 83", timeB:"vencedor 84", local:"A definir" },
-  { id:"jogo94", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 81", timeB:"vencedor 82", local:"A definir" },
-  { id:"jogo95", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 86", timeB:"vencedor 88", local:"A definir" },
-  { id:"jogo96", fase:"oitavas", rodada:16, data:"A definir", hora:"", grupo:"Oitavas", timeA:"vencedor 85", timeB:"vencedor 87", local:"A definir" },
+  { id:"jogo89", fase:"oitavas", rodada:16, data:"04/07 Sáb", hora:"14h",  grupo:"Oitavas", timeA:"vencedor 73", timeB:"vencedor 75", local:"A definir" },
+  { id:"jogo90", fase:"oitavas", rodada:16, data:"04/07 Sáb", hora:"18h",  grupo:"Oitavas", timeA:"vencedor 74", timeB:"vencedor 77", local:"A definir" },
+  { id:"jogo91", fase:"oitavas", rodada:16, data:"05/07 Dom", hora:"17h",  grupo:"Oitavas", timeA:"vencedor 76", timeB:"vencedor 78", local:"A definir" },
+  { id:"jogo92", fase:"oitavas", rodada:16, data:"05/07 Dom", hora:"21h",  grupo:"Oitavas", timeA:"vencedor 79", timeB:"vencedor 80", local:"A definir" },
+  { id:"jogo93", fase:"oitavas", rodada:16, data:"06/07 Seg", hora:"16h",  grupo:"Oitavas", timeA:"vencedor 83", timeB:"vencedor 84", local:"A definir" },
+  { id:"jogo94", fase:"oitavas", rodada:16, data:"06/07 Seg", hora:"21h",  grupo:"Oitavas", timeA:"vencedor 81", timeB:"vencedor 82", local:"A definir" },
+  { id:"jogo95", fase:"oitavas", rodada:16, data:"07/07 Ter", hora:"13h",  grupo:"Oitavas", timeA:"vencedor 86", timeB:"vencedor 88", local:"A definir" },
+  { id:"jogo96", fase:"oitavas", rodada:16, data:"07/07 Ter", hora:"17h",  grupo:"Oitavas", timeA:"vencedor 85", timeB:"vencedor 87", local:"A definir" },
 
   // QUARTAS
   { id:"jogo97", fase:"quartas", rodada:8, data:"A definir", hora:"", grupo:"Quartas", timeA:"vencedor 89", timeB:"vencedor 90", local:"A definir" },
@@ -499,7 +504,7 @@ const jogos = [
 
 const CHAVEAMENTO_MATA = {
   mata32: {
-    titulo: "16 AVOS DE FINAL",
+    titulo: "32 AVOS DE FINAL",
     jogos: [
       {id:"Jogo 73", confronto:"🇿🇦 África do Sul x 🇨🇦 Canadá"},
       {id:"Jogo 74", confronto:"🇧🇷 Brasil x 🇯🇵 Japão"},
@@ -858,7 +863,7 @@ function atualizarBannerPrazo() {
     const isTimeDefinidoBanner = nome => !/^(vencedor|perdedor)\s+\d+/.test(nome);
     const algumDefinidoBanner = jogosFaseMata.some(j=>isTimeDefinidoBanner(j.timeA)&&isTimeDefinidoBanner(j.timeB));
     const faseTituloMap = {
-      mata32:"16 AVOS de Final", oitavas:"Oitavas de Final", quartas:"Quartas de Final",
+      mata32:"32 Avos de Final", oitavas:"Oitavas de Final", quartas:"Quartas de Final",
       semis:"Semifinais", terceiro:"3º Lugar", final:"Final"
     };
     const nomeF = faseTituloMap[faseAtual] || fase.nome;
@@ -969,10 +974,17 @@ function vencedorOuPerdedor(jogoNum, tipo, cache) {
   const id = "jogo" + jogoNum;
   const jogoResolvido = resolverJogoMata(id, cache);
   const r = resultadoDoJogo(id);
-  if (!r) return tipo + " " + jogoNum;
-  if (r.placarA === r.placarB) return "Definir nos pênaltis (jogo " + jogoNum + ")";
-  const vencedor = r.placarA > r.placarB ? jogoResolvido.timeA : jogoResolvido.timeB;
-  const perdedor = r.placarA > r.placarB ? jogoResolvido.timeB : jogoResolvido.timeA;
+  if (!r || !jogoResolvido) return tipo + " " + jogoNum;
+  let passouA;
+  if (r.placarA === r.placarB) {
+    // Empate no tempo regulamentar: usa penaltiVencedor salvo no Admin
+    if (!r.penaltiVencedor) return tipo + " " + jogoNum; // ainda aguardando pênaltis
+    passouA = r.penaltiVencedor === "A";
+  } else {
+    passouA = r.placarA > r.placarB;
+  }
+  const vencedor = passouA ? jogoResolvido.timeA : jogoResolvido.timeB;
+  const perdedor = passouA ? jogoResolvido.timeB : jogoResolvido.timeA;
   return tipo === "vencedor" ? vencedor : perdedor;
 }
 
@@ -991,7 +1003,7 @@ function resolverJogoMata(jogoId, cache={}) {
   if (!jogo || !def) return jogo;
   const classificacao = calcularClassificacaoGrupos();
   const usadosTerceiros = new Set();
-  // Resolve os 16 AVOS em ordem para não repetir o mesmo terceiro dentro dos slots permitidos.
+  // Resolve os 32 avos em ordem para não repetir o mesmo terceiro dentro dos slots permitidos.
   // Apenas para slots genéricos (que ainda referenciam grupos), não para times fixos.
   Object.keys(DEFINICAO_MATA).filter(id => Number(id.replace('jogo','')) >= 73 && Number(id.replace('jogo','')) <= 88).forEach(id => {
     if (Number(id.replace('jogo','')) < Number(jogoId.replace('jogo',''))) {
@@ -1013,7 +1025,14 @@ function obterJogoExibicao(jogo) {
 
 function resultadoTexto(jogoId) {
   const r = resultadoDoJogo(jogoId);
-  return r ? `<div style="margin-top:10px;font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--ouro);">${r.placarA} x ${r.placarB}</div>` : '';
+  if (!r) return '';
+  const jExib = obterJogoExibicao(jogos.find(j => j.id === jogoId));
+  let penHtml = '';
+  if (r.penaltiVencedor && jExib) {
+    const nomeVen = r.penaltiVencedor === "A" ? jExib.timeA : jExib.timeB;
+    penHtml = `<div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;color:var(--ouro);opacity:0.8;margin-top:2px;">⚽ pen: ${nomeVen}</div>`;
+  }
+  return `<div style="margin-top:10px;font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--ouro);">${r.placarA} x ${r.placarB}</div>${penHtml}`;
 }
 
 // ─── Mostrar jogos ────────────────────────────────────────────────────────
@@ -1042,7 +1061,7 @@ function mostrarJogos() {
     const tituloFase = (CHAVEAMENTO_MATA[faseAtual]?.titulo || fase.nome).toUpperCase();
 
     const faseLabelMap = {
-      mata32:"16 AVOS", oitavas:"OITAVAS", quartas:"QUARTAS",
+      mata32:"32 AVOS", oitavas:"OITAVAS", quartas:"QUARTAS",
       semis:"SEMIS", terceiro:"3º LUGAR", final:"FINAL"
     };
     const faseLabel = faseLabelMap[faseAtual] || tituloFase;
@@ -1082,13 +1101,17 @@ function mostrarJogos() {
 
       if (!times_ok) {
         card.className="jogo-card bloqueado";
+        const jogoOrigWait = jogos.find(j=>j.id===jogo.id);
+        const dataHoraWait = jogoOrigWait && jogoOrigWait.hora
+          ? jogoOrigWait.hora+' &nbsp;·&nbsp; '+jogoOrigWait.data
+          : (jogoOrigWait && jogoOrigWait.data !== 'A definir' ? jogoOrigWait.data : 'A definir');
         card.innerHTML=
-          '<div class="jogo-data"><span class="jogo-data-dot"></span>'+
+          '<div class="jogo-data"><span class="jogo-data-dot"></span>'+dataHoraWait+
           '<span style="margin-left:auto;background:rgba(245,197,24,0.12);border:1px solid var(--ouro);border-radius:4px;padding:1px 8px;font-size:11px;letter-spacing:1px;color:var(--ouro);">'+faseLabel+'</span></div>'+
           '<div class="jogo-times">'+
-          '<div class="time-nome" style="color:var(--texto-muted);font-size:13px;">'+jogo.timeA+'</div>'+
-          '<div class="jogo-vs">VS</div>'+
-          '<div class="time-nome" style="color:var(--texto-muted);font-size:13px;">'+jogo.timeB+'</div>'+
+          '<div class="time-nome" style="color:var(--texto-muted);font-size:13px;opacity:0.5;">A definir</div>'+
+          '<div class="jogo-vs" style="opacity:0.4;">VS</div>'+
+          '<div class="time-nome" style="color:var(--texto-muted);font-size:13px;opacity:0.5;">A definir</div>'+
           '</div>'+
           '<button class="btn-salvar" disabled style="opacity:0.35;cursor:not-allowed;">⏳ Aguardando fase anterior</button>';
         grid.appendChild(card);
@@ -1454,24 +1477,83 @@ function preencherSelectJogos() {
     opt.textContent = j.data + " | " + j.grupo + " | " + j.timeA + " x " + j.timeB;
     sel.appendChild(opt);
   });
+  // Helper: atualiza visibilidade do campo pênaltis
+  function atualizarCampoPenalti(jogoId) {
+    const pA = parseInt(document.getElementById("adminPlacarA").value);
+    const pB = parseInt(document.getElementById("adminPlacarB").value);
+    const wrap = document.getElementById("adminPenaltiWrap");
+    const btns = document.getElementById("adminPenaltiBtns");
+    const jogo = obterJogoExibicao(jogos.find(j => j.id === jogoId));
+    const r = resultados[jogoId];
+    if (!isNaN(pA) && !isNaN(pB) && pA === pB && jogo && jogo.timeA && jogo.timeB &&
+        !/^(vencedor|perdedor)\s+\d+/.test(jogo.timeA)) {
+      wrap.style.display = "block";
+      const atual = r && r.penaltiVencedor ? r.penaltiVencedor : null;
+      btns.innerHTML = [
+        { val:"A", nome: jogo.timeA },
+        { val:"B", nome: jogo.timeB }
+      ].map(t => {
+        const sel = atual === t.val ? "background:var(--ouro);color:#000;" : "background:var(--fundo2);color:var(--texto);";
+        return \`<button id="btnPen\${t.val}" onclick="window.selecionarPenalti('\${t.val}','\${jogoId}')"
+          style="flex:1;padding:12px 8px;\${sel}border:2px solid var(--ouro);border-radius:8px;
+          font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:1px;cursor:pointer;
+          text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="\${t.nome}">\${t.nome}</button>\`;
+      }).join("");
+    } else {
+      wrap.style.display = "none";
+      btns.innerHTML = "";
+    }
+  }
+
+  window.selecionarPenalti = function(val, jogoId) {
+    // Guarda seleção temporária no dataset do wrap
+    document.getElementById("adminPenaltiWrap").dataset.penalti = val;
+    atualizarCampoPenalti(jogoId);
+    // Atualizar visual dos botões
+    ["A","B"].forEach(v => {
+      const btn = document.getElementById("btnPen"+v);
+      if (!btn) return;
+      if (v === val) {
+        btn.style.background = "var(--ouro)";
+        btn.style.color = "#000";
+      } else {
+        btn.style.background = "var(--fundo2)";
+        btn.style.color = "var(--texto)";
+      }
+    });
+  };
+
   sel.addEventListener("change", function() {
     const jogo = obterJogoExibicao(jogos.find(j => j.id === this.value));
     const info = document.getElementById("adminJogoInfo");
-    if (!jogo) { info.style.display = "none"; return; }
+    const wrap = document.getElementById("adminPenaltiWrap");
+    if (!jogo) { info.style.display = "none"; wrap.style.display = "none"; return; }
     info.style.display = "block";
     document.getElementById("adminJogoTimes").textContent = jogo.timeA + "  ×  " + jogo.timeB;
     // Mostrar resultado atual se existir
     const r = resultados[jogo.id];
     const atual = document.getElementById("adminResultadoAtual");
     if (r) {
-      atual.textContent = "Resultado atual: " + r.placarA + " x " + r.placarB;
+      const penStr = r.penaltiVencedor ? (r.penaltiVencedor === "A" ? " (pen: "+jogo.timeA+")" : " (pen: "+jogo.timeB+")") : "";
+      atual.textContent = "Resultado atual: " + r.placarA + " x " + r.placarB + penStr;
       document.getElementById("adminPlacarA").value = r.placarA;
       document.getElementById("adminPlacarB").value = r.placarB;
+      if (r.penaltiVencedor) wrap.dataset.penalti = r.penaltiVencedor;
     } else {
       atual.textContent = "Sem resultado inserido ainda";
       document.getElementById("adminPlacarA").value = "";
       document.getElementById("adminPlacarB").value = "";
+      wrap.dataset.penalti = "";
     }
+    atualizarCampoPenalti(jogo.id);
+  });
+
+  // Detectar empate ao digitar placar
+  ["adminPlacarA","adminPlacarB"].forEach(id => {
+    document.getElementById(id).addEventListener("input", () => {
+      const jogoId = document.getElementById("adminJogoSelect").value;
+      if (jogoId) atualizarCampoPenalti(jogoId);
+    });
   });
 }
 
@@ -1482,16 +1564,33 @@ window.salvarResultado = async function() {
   const pA = document.getElementById("adminPlacarA").value;
   const pB = document.getElementById("adminPlacarB").value;
   if (pA === "" || pB === "") { mostrarToast("Preencha o placar!", true); return; }
+  // Verificar pênaltis em caso de empate em jogo de mata-mata
+  const isMataJogo = jogos.find(j => j.id === jogoId && j.fase && !j.fase.startsWith("grupos_"));
+  const empate = parseInt(pA) === parseInt(pB);
+  let penaltiVencedor = null;
+  if (isMataJogo && empate) {
+    const wrap = document.getElementById("adminPenaltiWrap");
+    penaltiVencedor = wrap.dataset.penalti || null;
+    if (!penaltiVencedor) {
+      mostrarToast("Empate! Selecione quem passou nos pênaltis.", true);
+      wrap.style.animation = "none"; wrap.offsetHeight; wrap.style.animation = "";
+      return;
+    }
+  }
   try {
-    await setDoc(doc(db, "resultados", jogoId), {
+    const dadosResult = {
       jogoId,
       placarA: parseInt(pA),
       placarB: parseInt(pB),
       atualizadoEm: new Date()
-    });
-    resultados[jogoId] = { placarA: parseInt(pA), placarB: parseInt(pB) };
-    document.getElementById("adminResultadoAtual").textContent = "Resultado atual: " + pA + " x " + pB;
-    mostrarToast("Resultado salvo! " + pA + " x " + pB);
+    };
+    if (penaltiVencedor) dadosResult.penaltiVencedor = penaltiVencedor;
+    await setDoc(doc(db, "resultados", jogoId), dadosResult);
+    resultados[jogoId] = { placarA: parseInt(pA), placarB: parseInt(pB), penaltiVencedor };
+    const jExib = obterJogoExibicao(jogos.find(j => j.id === jogoId));
+    const penStr = penaltiVencedor ? " • pen: "+(penaltiVencedor==="A" ? jExib.timeA : jExib.timeB) : "";
+    document.getElementById("adminResultadoAtual").textContent = "Resultado atual: " + pA + " x " + pB + penStr;
+    mostrarToast("✅ Salvo! " + pA + " x " + pB + penStr);
     carregarResultadosAdmin();
   } catch(e) { console.error(e); mostrarToast("Erro ao salvar resultado.", true); }
 };
@@ -1505,8 +1604,10 @@ function carregarResultadosAdmin() {
       const r = d.data();
       const jogo = obterJogoExibicao(jogos.find(j => j.id === r.jogoId));
       const label = jogo ? (jogo.timeA + " x " + jogo.timeB) : r.jogoId;
+      const penLabel = r.penaltiVencedor && jogo
+        ? `<div style="font-size:11px;color:var(--ouro);font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;margin-top:2px;">pen: ${r.penaltiVencedor==="A"?jogo.timeA:jogo.timeB}</div>` : "";
       return `<div style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--superficie);border:1px solid var(--borda);border-radius:8px;">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--texto);flex:1;letter-spacing:0.5px;">${label}</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--texto);flex:1;letter-spacing:0.5px;">${label}${penLabel}</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ouro);background:var(--fundo2);border:1px solid var(--borda-brilho);border-radius:6px;padding:2px 12px;">${r.placarA} x ${r.placarB}</div>
         <button onclick="window.excluirResultado('${r.jogoId}')" style="padding:4px 10px;border:1px solid var(--vermelho);background:transparent;color:var(--vermelho);border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;">✕</button>
       </div>`;
