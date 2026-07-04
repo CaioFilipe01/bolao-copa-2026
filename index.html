@@ -478,28 +478,42 @@ const jogos = [
   { id:"jogo88", fase:"mata32", rodada:32, data:"03/07 Sex", hora:"22h30",  grupo:"32 avos", timeA:"🇦🇺 Austrália", timeB:"🇪🇬 Egito", local:"A definir" },
 
   // OITAVAS
-  { id:"jogo89", fase:"oitavas", rodada:16, data:"04/07 Sáb", hora:"14h",  grupo:"Oitavas", timeA:"vencedor 73", timeB:"vencedor 75", local:"A definir" },
-  { id:"jogo90", fase:"oitavas", rodada:16, data:"04/07 Sáb", hora:"18h",  grupo:"Oitavas", timeA:"vencedor 74", timeB:"vencedor 77", local:"A definir" },
-  { id:"jogo91", fase:"oitavas", rodada:16, data:"05/07 Dom", hora:"17h",  grupo:"Oitavas", timeA:"vencedor 76", timeB:"vencedor 78", local:"A definir" },
+  // jogo89: Canadá (venc73) × Marrocos (venc76)
+  { id:"jogo89", fase:"oitavas", rodada:16, data:"04/07 Sáb", hora:"14h",  grupo:"Oitavas", timeA:"vencedor 73", timeB:"vencedor 76", local:"A definir" },
+  // jogo90: Paraguai (venc75) × França (venc78)
+  { id:"jogo90", fase:"oitavas", rodada:16, data:"04/07 Sáb", hora:"18h",  grupo:"Oitavas", timeA:"vencedor 75", timeB:"vencedor 78", local:"A definir" },
+  // jogo91: Brasil (venc74) × Noruega (venc77)
+  { id:"jogo91", fase:"oitavas", rodada:16, data:"05/07 Dom", hora:"17h",  grupo:"Oitavas", timeA:"vencedor 74", timeB:"vencedor 77", local:"A definir" },
+  // jogo92: México (venc79) × Inglaterra (venc80)
   { id:"jogo92", fase:"oitavas", rodada:16, data:"05/07 Dom", hora:"21h",  grupo:"Oitavas", timeA:"vencedor 79", timeB:"vencedor 80", local:"A definir" },
-  { id:"jogo93", fase:"oitavas", rodada:16, data:"06/07 Seg", hora:"16h",  grupo:"Oitavas", timeA:"vencedor 83", timeB:"vencedor 84", local:"A definir" },
-  { id:"jogo94", fase:"oitavas", rodada:16, data:"06/07 Seg", hora:"21h",  grupo:"Oitavas", timeA:"vencedor 81", timeB:"vencedor 82", local:"A definir" },
+  // jogo93: Portugal (venc84) × Espanha (venc83)
+  { id:"jogo93", fase:"oitavas", rodada:16, data:"06/07 Seg", hora:"16h",  grupo:"Oitavas", timeA:"vencedor 84", timeB:"vencedor 83", local:"A definir" },
+  // jogo94: Estados Unidos (venc82) × Bélgica (venc81)
+  { id:"jogo94", fase:"oitavas", rodada:16, data:"06/07 Seg", hora:"21h",  grupo:"Oitavas", timeA:"vencedor 82", timeB:"vencedor 81", local:"A definir" },
+  // jogo95: Argentina (venc86) × Egito (venc88)
   { id:"jogo95", fase:"oitavas", rodada:16, data:"07/07 Ter", hora:"13h",  grupo:"Oitavas", timeA:"vencedor 86", timeB:"vencedor 88", local:"A definir" },
+  // jogo96: Suíça (venc85) × Colômbia (venc87)
   { id:"jogo96", fase:"oitavas", rodada:16, data:"07/07 Ter", hora:"17h",  grupo:"Oitavas", timeA:"vencedor 85", timeB:"vencedor 87", local:"A definir" },
 
   // QUARTAS
-  { id:"jogo97", fase:"quartas", rodada:8, data:"A definir", hora:"", grupo:"Quartas", timeA:"vencedor 89", timeB:"vencedor 90", local:"A definir" },
-  { id:"jogo98", fase:"quartas", rodada:8, data:"A definir", hora:"", grupo:"Quartas", timeA:"vencedor 93", timeB:"vencedor 94", local:"A definir" },
-  { id:"jogo99", fase:"quartas", rodada:8, data:"A definir", hora:"", grupo:"Quartas", timeA:"vencedor 91", timeB:"vencedor 92", local:"A definir" },
-  { id:"jogo100", fase:"quartas", rodada:8, data:"A definir", hora:"", grupo:"Quartas", timeA:"vencedor 95", timeB:"vencedor 96", local:"A definir" },
+  // QF1 09/07 17h: venc(Paraguai/França) × venc(Canadá/Marrocos)
+  { id:"jogo97",  fase:"quartas", rodada:8, data:"09/07 Qui", hora:"17h",  grupo:"Quartas", timeA:"vencedor 90", timeB:"vencedor 89", local:"A definir" },
+  // QF2 10/07 16h: venc(Portugal/Espanha) × venc(EUA/Bélgica)
+  { id:"jogo98",  fase:"quartas", rodada:8, data:"10/07 Sex", hora:"16h",  grupo:"Quartas", timeA:"vencedor 93", timeB:"vencedor 94", local:"A definir" },
+  // QF3 11/07 18h: venc(Brasil/Noruega) × venc(México/Inglaterra)
+  { id:"jogo99",  fase:"quartas", rodada:8, data:"11/07 Sáb", hora:"18h",  grupo:"Quartas", timeA:"vencedor 91", timeB:"vencedor 92", local:"A definir" },
+  // QF4 11/07 22h: venc(Argentina/Egito) × venc(Suíça/Colômbia)
+  { id:"jogo100", fase:"quartas", rodada:8, data:"11/07 Sáb", hora:"22h",  grupo:"Quartas", timeA:"vencedor 95", timeB:"vencedor 96", local:"A definir" },
 
   // SEMIFINAIS
-  { id:"jogo101", fase:"semis", rodada:4, data:"A definir", hora:"", grupo:"Semifinais", timeA:"vencedor 97", timeB:"vencedor 98", local:"A definir" },
-  { id:"jogo102", fase:"semis", rodada:4, data:"A definir", hora:"", grupo:"Semifinais", timeA:"vencedor 99", timeB:"vencedor 100", local:"A definir" },
+  // SF1 14/07 16h: venc QF1 × venc QF2
+  { id:"jogo101", fase:"semis", rodada:4, data:"14/07 Ter", hora:"16h",  grupo:"Semifinais", timeA:"vencedor 97", timeB:"vencedor 98", local:"A definir" },
+  // SF2 15/07 16h: venc QF3 × venc QF4
+  { id:"jogo102", fase:"semis", rodada:4, data:"15/07 Qua", hora:"16h",  grupo:"Semifinais", timeA:"vencedor 99", timeB:"vencedor 100", local:"A definir" },
 
   // 3º LUGAR E FINAL
-  { id:"jogo103", fase:"terceiro", rodada:2, data:"A definir", hora:"", grupo:"3º lugar", timeA:"perdedor 101", timeB:"perdedor 102", local:"A definir" },
-  { id:"jogo104", fase:"final", rodada:1, data:"A definir", hora:"", grupo:"Final", timeA:"vencedor 101", timeB:"vencedor 102", local:"A definir" },
+  { id:"jogo103", fase:"terceiro", rodada:2, data:"18/07 Sáb", hora:"18h",  grupo:"3º lugar", timeA:"perdedor 101", timeB:"perdedor 102", local:"A definir" },
+  { id:"jogo104", fase:"final",    rodada:1, data:"19/07 Dom", hora:"16h",  grupo:"Final",    timeA:"vencedor 101", timeB:"vencedor 102", local:"A definir" },
 ];
 
 const CHAVEAMENTO_MATA = {
@@ -963,9 +977,9 @@ const DEFINICAO_MATA = {
   jogo77:["🇨🇮 Costa do Marfim","🇳🇴 Noruega"], jogo78:["🇫🇷 França","🇸🇪 Suécia"], jogo79:["🇲🇽 México","🇪🇨 Equador"], jogo80:["🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra","🇨🇩 Congo DR"],
   jogo81:["🇧🇪 Bélgica","🇸🇳 Senegal"], jogo82:["🇺🇸 Estados Unidos","🇧🇦 Bósnia e Herzegovina"], jogo83:["🇪🇸 Espanha","🇦🇹 Áustria"], jogo84:["🇵🇹 Portugal","🇭🇷 Croácia"],
   jogo85:["🇨🇭 Suíça","🇩🇿 Argélia"], jogo86:["🇦🇷 Argentina","🇨🇻 Cabo Verde"], jogo87:["🇨🇴 Colômbia","🇬🇭 Gana"], jogo88:["🇦🇺 Austrália","🇪🇬 Egito"],
-  jogo89:["vencedor 73","vencedor 75"], jogo90:["vencedor 74","vencedor 77"], jogo91:["vencedor 76","vencedor 78"], jogo92:["vencedor 79","vencedor 80"],
-  jogo93:["vencedor 83","vencedor 84"], jogo94:["vencedor 81","vencedor 82"], jogo95:["vencedor 86","vencedor 88"], jogo96:["vencedor 85","vencedor 87"],
-  jogo97:["vencedor 89","vencedor 90"], jogo98:["vencedor 93","vencedor 94"], jogo99:["vencedor 91","vencedor 92"], jogo100:["vencedor 95","vencedor 96"],
+  jogo89:["vencedor 73","vencedor 76"], jogo90:["vencedor 75","vencedor 78"], jogo91:["vencedor 74","vencedor 77"], jogo92:["vencedor 79","vencedor 80"],
+  jogo93:["vencedor 84","vencedor 83"], jogo94:["vencedor 82","vencedor 81"], jogo95:["vencedor 86","vencedor 88"], jogo96:["vencedor 85","vencedor 87"],
+  jogo97:["vencedor 90","vencedor 89"], jogo98:["vencedor 93","vencedor 94"], jogo99:["vencedor 91","vencedor 92"], jogo100:["vencedor 95","vencedor 96"],
   jogo101:["vencedor 97","vencedor 98"], jogo102:["vencedor 99","vencedor 100"],
   jogo103:["perdedor 101","perdedor 102"], jogo104:["vencedor 101","vencedor 102"]
 };
@@ -1494,10 +1508,10 @@ function preencherSelectJogos() {
         { val:"B", nome: jogo.timeB }
       ].map(t => {
         const sel = atual === t.val ? "background:var(--ouro);color:#000;" : "background:var(--fundo2);color:var(--texto);";
-        return \`<button id="btnPen\${t.val}" onclick="window.selecionarPenalti('\${t.val}','\${jogoId}')"
-          style="flex:1;padding:12px 8px;\${sel}border:2px solid var(--ouro);border-radius:8px;
+        return `<button id="btnPen${t.val}" onclick="window.selecionarPenalti('${t.val}','${jogoId}')"
+          style="flex:1;padding:12px 8px;${sel}border:2px solid var(--ouro);border-radius:8px;
           font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:1px;cursor:pointer;
-          text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="\${t.nome}">\${t.nome}</button>\`;
+          text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title="${t.nome}">${t.nome}</button>`;
       }).join("");
     } else {
       wrap.style.display = "none";
